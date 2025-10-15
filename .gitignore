@@ -1,0 +1,11 @@
+# If you know what a .gitignore file is and does, you can modify this as needed. 
+bin/
+out/
+.DS_Store
+.gitignore
+*.class
+
+# Exlude all xml files except those critical for IntelliJ project configuration
+*.xml
+!/.idea/misc.xml
+!/.idea/modules.xml
