@@ -21,7 +21,7 @@ public class MainApp {
 	
 	private void runApp() {
 		System.out.println("Write your cool final project here!");
-        System.out.println("Seocnd Print statement");
+        System.out.println("Second Print statement");
 		
 		//Launch image demo in a Frame
 		imageDemo();
