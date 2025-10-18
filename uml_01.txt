@@ -1,0 +1,93 @@
+@startuml
+
+class Main {
+}
+Main --> PhenotypeViewer
+Main --> EvolutionSimulatorGUI
+Main --> ChromosomeEditor
+
+class Population {
+mutateChromosomes(): void
+calculateDiversity(): double
+}
+Population -->"*" Chromosome
+
+class Chromosome {
+genotype: BitSet
+mutate(mutator: Mutation): void
+setBit(bitIdx: int): void
+getBit(bitIdx: int): int?
+}
+
+class Fitness {
+evaluateFitness(chromosome: Chromosome): double
+}
+
+
+enum SelectionType{
+Roulette
+Truncation
+Ranked
+}
+
+class Selection {
+selectChromosomes(pop: Population): ArrayList<Chromosome>
+}
+Selection --> SelectionType
+
+class Crossover {
+createOffspring(c1: Chromosome, c2: Chromosome): Chromosome
+}
+
+class Mutation {
+mutateChromosome(c: Chromosome): void
+}
+
+class ChromosomeEditor extends JFrame{
+loadButton: JButton
+saveButton: JButton
+toggleBit(idx: int): void
+}
+ChromosomeEditor --> ChromosomeDisplay
+ChromosomeEditor --> FileIO
+ChromosomeEditor --> Chromosome
+
+class ChromosomeDisplay extends JPanel{
+drawChromosome(): void
+}
+ChromosomeDisplay --> Chromosome
+
+class PhenotypeViewer extends JFrame{
+loadButton: JButton
+}
+PhenotypeViewer --> FileIO
+
+class EvolutionSimulator {
+generation: int
+crossoverActive: boolean
+initializePopulation(): void
+runSimulation(generations: int): void
+simulateGeneration(): void
+}
+EvolutionSimulator --> Selection
+EvolutionSimulator --> Crossover
+EvolutionSimulator --> Fitness
+EvolutionSimulator --> Mutation
+EvolutionSimulator --> Population
+
+class EvolutionSimulatorGUI extends JFrame {
+timer: Timer
+startSimulation(): void
+pauseSimulation(): void
+setSimulationGenerations(gen: int): void
+setSimulationTime(time: double): void
+plotGeneration(): void
+}
+EvolutionSimulatorGUI --> EvolutionSimulator
+
+class FileIO {
+loadChromosome(filename: String): Chromosome
+saveChromosome(chromosome: Chromosome filepath: String): void
+}
+
+@enduml
