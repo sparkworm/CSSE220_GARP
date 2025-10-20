@@ -61,10 +61,10 @@ FileIO is the class responsible for saving and loading chromosome data (and perh
 
 ### M4
 (specified by document)
-1. Submit a final UML diagram reflecting the actual code. (10%)
-2. Conduct a set of experiments and analyze results. (40%)
-3. Complete your selected goal system (Science, Engineering, Art) (50%)
-4. BONUS: Open-Ended Extensions (Inverse Kinematics??)
+1. Submit a final UML diagram reflecting the actual code  
+2. Conduct a set of experiments and analyze results  
+3. Complete your selected goal system (Engineering)  
+4. BONUS: Open-Ended Extensions (Inverse Kinematics??)  
 
 ## Section 3: Potential Classes
 GA
