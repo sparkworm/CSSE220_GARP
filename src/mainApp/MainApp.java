@@ -1,5 +1,7 @@
 package mainApp;
 
+import simulation.Chromosome; // for testing purposes
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -24,8 +26,9 @@ public class MainApp {
         System.out.println("Second Print statement");
 		
 		//Launch image demo in a Frame
-		imageDemo();
-		
+		//imageDemo();
+		Chromosome c = new Chromosome(100, true);
+        System.out.println(c);
 	} // runApp
 	
 	
