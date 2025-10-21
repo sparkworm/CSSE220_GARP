@@ -1,0 +1,117 @@
+@startuml
+
+class Main {
+}
+Main --> PhenotypeViewer
+Main --> EvolutionSimulatorGUI
+Main --> ChromosomeEditor
+
+class Population {
+populationSize: int
+mutateChromosomes(mutation: Mutation): void
+calculateDiversity(): double
+}
+Population -->"*" Chromosome
+
+class Chromosome {
+genotype: BitSet
+setBit(bitIdx: int, val: boolean): void
+getBit(bitIdx: int): boolean
+}
+
+abstract class Phenotype {
+Phenotype(c: Chromosome)
+calculateFitness(): double
+}
+
+class PathPhenotype extends Phenotype{
+getPathArray(): int[]
+}
+
+abstract class Fitness {
+getFitnessArray(pop: Population): double[]
+evaluateFitness(chromosome: Chromosome): double
+}
+
+class TerrainFitness extends Fitness {}
+TerrainFitness -> TerrainGrid
+TerrainFitness -> PathPhenotype
+
+class TerrainGrid {
+evaluatePathCost(int[] pathArray): double
+}
+
+enum SelectionType{
+Roulette
+Truncation
+Ranked
+}
+
+class Selection {
+selectChromosomes(pop: Population): ArrayList<Chromosome>
+}
+Selection --> SelectionType
+Selection --> Fitness
+
+class Crossover {
+createOffspring(c1: Chromosome, c2: Chromosome): Chromosome
+}
+
+class Mutation {
+mutateChromosome(c: Chromosome): void
+}
+
+class ChromosomeEditor extends JFrame{
+loadButton: JButton
+saveButton: JButton
+toggleBit(idx: int): void
+}
+ChromosomeEditor --> ChromosomeDisplay
+ChromosomeEditor --> FileIO
+ChromosomeEditor --> Chromosome
+
+class ChromosomeDisplay extends JPanel{
+drawChromosome(): void
+}
+ChromosomeDisplay --> Chromosome
+
+class PhenotypeViewer extends JFrame{
+loadButton: JButton
+}
+PhenotypeViewer --> FileIO
+
+class EvolutionSimulator {
+generation: int
+crossoverActive: boolean
+initializePopulation(): void
+runSimulation(generations: int): void
+simulateGeneration(): void
+}
+EvolutionSimulator --> Selection
+EvolutionSimulator --> Crossover
+EvolutionSimulator --> Fitness
+EvolutionSimulator --> Mutation
+EvolutionSimulator --> Population
+EvolutionSimulator -> EvolutionType
+
+enum EvolutionType {
+PATHFINDING
+INVERSE_KINEMATICS // WIP
+}
+
+class EvolutionSimulatorGUI extends JFrame {
+timer: Timer
+startSimulation(): void
+pauseSimulation(): void
+setSimulationGenerations(gen: int): void
+setSimulationTime(time: double): void
+plotGeneration(): void
+}
+EvolutionSimulatorGUI --> EvolutionSimulator
+
+class FileIO {
+loadChromosome(filepath: String): Chromosome
+saveChromosome(chromosome: Chromosome filepath: String): void
+}
+
+@enduml
