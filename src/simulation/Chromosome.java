@@ -69,6 +69,21 @@ public class Chromosome {
         }
     }
 
+    /**
+     * Will return an array of BitSet, with each BitSet storing fragSize bits.  Any remainder of length/fragSize is
+     * discarded.
+     * @param fragSize the number of bits in each BitSet in the array
+     * @return an array of BitSet, each storing a fragment of the genotype of length fragSize
+     */
+    public BitSet[] getGenotypeFragments(int fragSize) {
+        BitSet[] fragments = new BitSet[length/fragSize];
+        // traverse fragments in
+        for (int i=fragSize; i<=length; i+=fragSize) {
+            fragments[i] = genotype.get(i-fragSize, i);
+        }
+        return fragments;
+    }
+
     public String toString() {
         return "Chromosome with genotype of length: " + genotype.length() + "\n" + genotypeString();
     }
@@ -90,4 +105,7 @@ public class Chromosome {
         return genotypeString(10);
     }
 
+    public int getLength() {
+        return this.length;
+    }
 }
