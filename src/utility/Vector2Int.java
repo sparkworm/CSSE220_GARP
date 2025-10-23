@@ -22,7 +22,7 @@ public class Vector2Int {
     public Vector2Int opposite() {
         return new Vector2Int(-x,-y);
     }
-    
+
     /**
      * Returns the sum of the provided vectors
      * @param vec1
@@ -69,5 +69,9 @@ public class Vector2Int {
     public void setXY(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Vector2Int clone() {
+        return new Vector2Int(x, y);
     }
 }

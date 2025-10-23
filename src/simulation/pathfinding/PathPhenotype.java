@@ -2,6 +2,7 @@ package simulation.pathfinding;
 
 import simulation.Chromosome;
 import simulation.Phenotype;
+import utility.Vector2Int;
 
 import java.util.BitSet;
 
@@ -14,17 +15,17 @@ public class PathPhenotype extends Phenotype {
      * Stores a sequence of Directions sequentially, with each indicating which cardinal direction should be travelled
      * in.
      */
-    private Direction[] pathArray;
+    private Vector2Int[] pathArray;
 
     public PathPhenotype(Chromosome chromosome) {
         super(chromosome);
-        pathArray = new Direction[chromosome.getLength()/2];
+        pathArray = new Vector2Int[chromosome.getLength()/2];
         calculatePathArray(chromosome);
     }
 
     /**
      * Should generate this object's pathArray from the specified Chromosome
-     * @param chromosome
+     * @param chromosome the chromosome that the path will be decoded from
      */
     private void calculatePathArray(Chromosome chromosome) {
         BitSet[] fragments = chromosome.getGenotypeFragments(2);
@@ -35,32 +36,32 @@ public class PathPhenotype extends Phenotype {
 
     /**
      * Should provide a direction based on two bits.
-     * 00 = Directions.UP
-     * 01 = Directions.RIGHT
-     * 10 = Directions.DOWN
-     * 11 = Directions.LEFT
-     * @returns Direction corresponding to direction
+     * 00: up: Vector2Int(0,-1)
+     * 01: right: Vector2Int(1,0)
+     * 10: down: Vector2Int(0,1)
+     * 11: left: Vector2Int(-1,0)
+     * @returns vector corresponding to direction
      */
-    private Direction directionFromData(boolean bit1, boolean bit2) {
+    private Vector2Int directionFromData(boolean bit1, boolean bit2) {
         if (bit1) {
             if (bit2) { // 11
-                return Direction.LEFT;
+                return new Vector2Int(-1,0);
             }
             else { // 10
-                return Direction.DOWN;
+                return new Vector2Int(0,1);
             }
         }
         else {
             if (bit2) { // 01
-                return Direction.RIGHT;
+                return new Vector2Int(1,0);
             }
             else { // 00
-                return Direction.UP;
+                return new Vector2Int(0,-1);
             }
         }
     }
 
-    public Direction[] getPathArray() {
+    public Vector2Int[] getPathArray() {
         return this.pathArray;
     }
 }
