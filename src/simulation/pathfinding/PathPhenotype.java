@@ -10,7 +10,11 @@ import java.util.BitSet;
  * TerrainGrid.
  */
 public class PathPhenotype extends Phenotype {
-    Direction[] pathArray;
+    /**
+     * Stores a sequence of Directions sequentially, with each indicating which cardinal direction should be travelled
+     * in.
+     */
+    private Direction[] pathArray;
 
     PathPhenotype(Chromosome chromosome) {
         super(chromosome);
