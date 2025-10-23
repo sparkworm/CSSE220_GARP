@@ -1,15 +1,11 @@
 package mainApp;
 
+import GUI.PathPhenotypeViewer;
 import simulation.Chromosome; // for testing purposes
+import simulation.pathfinding.PathPhenotype;
+import simulation.pathfinding.TerrainGrid;
+import utility.Vector2Int;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 /**
@@ -29,6 +25,7 @@ public class MainApp {
 		//imageDemo();
 		Chromosome c = new Chromosome(100, true);
         System.out.println(c);
+        phenotypeViewer();
 	} // runApp
 	
 	
@@ -50,4 +47,14 @@ public class MainApp {
 		mainApp.runApp();		
 	} // main
 
+    public void phenotypeViewer() {
+        Chromosome testChromo = new Chromosome(100,true);
+        System.out.println("test chromo: \n" + testChromo);
+        PathPhenotype testPheno = new PathPhenotype(testChromo);
+        //System.out.println("test pheno: \n" + testPheno);
+        TerrainGrid testGrid = new TerrainGrid();
+        testGrid.getPositionArray(testPheno.getPathArray());
+        System.out.println(testGrid);
+        PathPhenotypeViewer pathPhenotypeViewer = new PathPhenotypeViewer(testPheno);
+    }
 }

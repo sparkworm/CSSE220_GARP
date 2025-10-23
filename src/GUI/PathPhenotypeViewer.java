@@ -28,7 +28,7 @@ public class PathPhenotypeViewer extends JFrame {
         setTitle("Phenotype Viewer");
         setSize(800,800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         // TODO: draw terrain backdrop
 
         // Draw path lines
