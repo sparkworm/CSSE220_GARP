@@ -74,4 +74,8 @@ public class Vector2Int {
     public Vector2Int clone() {
         return new Vector2Int(x, y);
     }
+
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }
