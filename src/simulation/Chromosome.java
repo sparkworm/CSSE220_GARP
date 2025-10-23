@@ -78,14 +78,15 @@ public class Chromosome {
     public BitSet[] getGenotypeFragments(int fragSize) {
         BitSet[] fragments = new BitSet[length/fragSize];
         // traverse fragments in
-        for (int i=fragSize; i<=length; i+=fragSize) {
-            fragments[i] = genotype.get(i-fragSize, i);
+        //for (int i=fragSize; i<=length; i+=fragSize) {
+        for (int i=0; i<fragments.length; i++) {
+            fragments[i] = genotype.get(i*fragSize, i*fragSize+fragSize);
         }
         return fragments;
     }
 
     public String toString() {
-        return "Chromosome with genotype of length: " + genotype.length() + "\n" + genotypeString();
+        return "Chromosome with genotype of length: " + length + "\n" + genotypeString();
     }
 
     /**
