@@ -16,7 +16,7 @@ public class PathPhenotype extends Phenotype {
      */
     private Direction[] pathArray;
 
-    PathPhenotype(Chromosome chromosome) {
+    public PathPhenotype(Chromosome chromosome) {
         super(chromosome);
         pathArray = new Direction[chromosome.getLength()/2];
         calculatePathArray(chromosome);
