@@ -64,4 +64,12 @@ public class PathPhenotype extends Phenotype {
     public Vector2Int[] getPathArray() {
         return this.pathArray;
     }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder("Path Phenotype with path: ");
+        for (Vector2Int v : pathArray) {
+            builder.append(v + " ");
+        }
+        return builder.toString();
+    }
 }
