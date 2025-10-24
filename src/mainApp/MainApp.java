@@ -31,7 +31,7 @@ public class MainApp {
 	
 	private void imageDemo() {
 		JFrame frame = new JFrame("CSSE220 Final Project Demo");
-		frame.setSize(400, 400);
+		frame.setSize(                                                                          400, 400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add( new DemoImageComponent() );		
 		frame.setVisible(true);
