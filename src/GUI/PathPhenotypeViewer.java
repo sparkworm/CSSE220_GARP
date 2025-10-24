@@ -8,16 +8,21 @@ import javax.swing.*;
 /**
  * Window for viewing phenotype.
  * <br><br>
- * Might eventual place functionality in a PathPhenotypePanel which will be displayed both in PathPhenotypeViewer and
+ * Might eventually place functionality in a PathPhenotypePanel which will be displayed both in PathPhenotypeViewer and
  * perhaps in some sort of population viewer, which would display multiple PathPhenotypePanels
  */
 public class PathPhenotypeViewer extends JFrame {
+    public static final int DEFAULT_TILE_SIZE = 100;
     private PathPhenotype phenotype;
     private TerrainGrid terrain;
+    private PhenotypeComponent phenotypeComponent;
+    // The length of one edge of any square tile
+    private int tileSize;
 
     public PathPhenotypeViewer(PathPhenotype phenotype, TerrainGrid terrain) {
         this.phenotype = phenotype;
         this.terrain = terrain;
+        this.tileSize = DEFAULT_TILE_SIZE;
         display();
     }
     public PathPhenotypeViewer(PathPhenotype phenotype) {
@@ -26,13 +31,13 @@ public class PathPhenotypeViewer extends JFrame {
 
     private void display() {
         setTitle("Phenotype Viewer");
-        setSize(800,800);
+        setSize(tileSize*terrain.getWidth(),tileSize*terrain.getHeight());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // TODO: draw terrain backdrop
+        // Draw terrain
+        add(new PhenotypeComponent(phenotype, terrain, tileSize));
 
         // Draw path lines
-        add(new MultiLineComponent(terrain.getPositionArray(phenotype.getPathArray()), 50));
         setVisible(true);
     }
 }

@@ -6,11 +6,12 @@ public class TerrainGrid {
 
     // Note that this would actually appear be inverted such that row=column and column=row
     private static final int[][] DEFAULT_COST_GRID = {
-            {1, 3, 6, 3, 6},
-            {5, 2, 7, 2, 5},
-            {5, 6, 1, 8, 9},
-            {8, 3, 1, 7, 8},
-            {7, 2, 4, 8, 4}
+            {1, 3, 6, 3, 6, 7},
+            {5, 2, 7, 2, 5, 5},
+            {5, 6, 1, 8, 9, 8},
+            {8, 3, 1, 7, 8, 7},
+            {7, 2, 4, 8, 4, 6},
+            {5, 1, 2, 6, 5, 6},
     };
 
     /**
@@ -79,10 +80,13 @@ public class TerrainGrid {
 
     /**
      * Finds the
-     * @param coord
+     * @param coord a vector defining the queried position
      */
     public int getDifficultAtCoord(Vector2Int coord) {
         return costGrid[coord.getX()][coord.getY()];
+    }
+    public int getDifficultAtCoord(int x, int y) {
+        return costGrid[x][y];
     }
 
     /**
@@ -106,5 +110,21 @@ public class TerrainGrid {
             }
         }
         return builder.toString();
+    }
+
+    /**
+     * Get width of terrain grid
+     * @return # of tiles accross
+     */
+    public int getWidth() {
+        return costGrid.length;
+    }
+
+    /**
+     * Get height of terrain grid
+     * @return # of tiles from top to bottom
+     */
+    public int getHeight() {
+        return costGrid[0].length;
     }
 }
