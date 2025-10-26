@@ -6,6 +6,7 @@ import utility.FileIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 
 public class ChromosomeEditor extends JFrame {
@@ -79,9 +80,11 @@ public class ChromosomeEditor extends JFrame {
     }
     private void loadChromosome() {
         JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("."));
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             this.chromosome = FileIO.readChromosomeFromFile(chooser.getSelectedFile());
             this.chromosomeComponent.setChromosome(this.chromosome);
+            System.out.println("Chromosome Loaded!");
 
             /* old design where errors were caught here instead of in FileIO
 
@@ -95,18 +98,19 @@ public class ChromosomeEditor extends JFrame {
 //                    setStatus("Error loading: " + ex.getMessage());
             }
             */
-
         }
-
     }
     private void saveChromosome(){
-        System.out.println("Chromosome saved!");
-
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("."));
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            FileIO.writeChromosomeToFile(this.chromosome, chooser.getSelectedFile());
+            System.out.println("Chromosome saved!");
+        }
     }
 
     private void mutateChromosome(){
         System.out.println("Chromosome mutated!");
-
     }
 
 

@@ -42,6 +42,7 @@ public class Chromosome {
      */
     public Chromosome (String strGenotype) {
         this.length = strGenotype.length();
+        this.genotype = new BitSet(strGenotype.length());
         for (int i=0; i<length; i++) {
             setBit(i, strGenotype.charAt(i)=='1');
         }
@@ -110,9 +111,9 @@ public class Chromosome {
         // if this is true, that means that the output is wanted on one line only, hence a newline should never be added
         if (lineLength == -1) lineLength = length + 1;
 
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(length);
         for (int i=0; i<length; ++i) {
-            if (i%lineLength==0) builder.append("\n");
+            if (i%lineLength==0 && i!=0) builder.append("\n");
             builder.append((genotype.get(i)) ? "1" : "0");
         }
         return builder.toString();
