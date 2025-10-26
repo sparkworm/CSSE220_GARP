@@ -42,14 +42,12 @@ public class ChromosomeEditor extends JFrame {
             }
         });
         buttonPanel.add(saveButton);
-
         JButton mutateButton = new JButton("Mutate");
-        loadButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mutateChromosome();
-            }
+        mutateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) { mutateChromosome(); }
         });
         buttonPanel.add(mutateButton);
+
         this.add(buttonPanel, BorderLayout.SOUTH);
 
         this.chromosomeComponent.addMouseListener(new MouseListener() {
@@ -84,7 +82,7 @@ public class ChromosomeEditor extends JFrame {
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             this.chromosome = FileIO.readChromosomeFromFile(chooser.getSelectedFile());
             this.chromosomeComponent.setChromosome(this.chromosome);
-            System.out.println("Chromosome Loaded!");
+            System.out.println("Chromosome loaded!");
 
             /* old design where errors were caught here instead of in FileIO
 
@@ -110,6 +108,8 @@ public class ChromosomeEditor extends JFrame {
     }
 
     private void mutateChromosome(){
+        chromosomeComponent.getChromosome().randomizeGenotype(0.5);
+        chromosomeComponent.repaint();
         System.out.println("Chromosome mutated!");
     }
 
