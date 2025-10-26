@@ -70,5 +70,10 @@ public class ChromosomeComponent extends JComponent {
     }
 
     public int getPixelSize() {
+        return pixel_size;
+    }
+
+    public Chromosome getChromosome() {
+        return chromosome;
     }
 }
