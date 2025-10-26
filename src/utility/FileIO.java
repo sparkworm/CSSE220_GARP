@@ -17,6 +17,17 @@ public class FileIO {
         try {
             reader = new BufferedReader(new FileReader(file));
             String strGenotype = reader.readLine();
+
+            // VALIDATE: Remove whitespace
+            strGenotype = strGenotype.replaceAll("\\s+", "");
+
+// VALIDATE: Check only 0s and 1s
+            if (!strGenotype.matches("[01]+")) {
+                System.err.println("INVALID FILE: Contains non-binary characters!");
+                System.err.println("File: " + file.getName());
+                return null;
+            }
+
             return new Chromosome(strGenotype);
         }
         // Might consider throwing error instead of fully catching it so that a null Chromosome doesn't need to be
