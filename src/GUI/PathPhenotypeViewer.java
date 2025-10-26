@@ -15,7 +15,7 @@ public class PathPhenotypeViewer extends JFrame {
     public static final int DEFAULT_TILE_SIZE = 100;
     private PathPhenotype phenotype;
     private TerrainGrid terrain;
-    private PhenotypeComponent phenotypeComponent;
+    private PathPhenotypeComponent pathPhenotypeComponent;
     // The length of one edge of any square tile
     private int tileSize;
 
@@ -34,7 +34,7 @@ public class PathPhenotypeViewer extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Draw terrain
-        add(new PhenotypeComponent(phenotype, terrain, tileSize));
+        add(new PathPhenotypeComponent(phenotype, terrain, tileSize));
 
         pack();
 
