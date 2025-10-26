@@ -102,10 +102,14 @@ public class Chromosome {
 
     /**
      * Produce a string representing the genotype, using 1s and 0s.
-     * @param lineLength the length that the line will go before wrapping onto a newline.  Must be greater than 0
+     * @param lineLength the length that the line will go before wrapping onto a newline.  If this is -1, then
+     *                   no wrapping will be performed.
      * @return string representing the genotype, composed of 1s and 0s
      */
     public String genotypeString(int lineLength) {
+        // if this is true, that means that the output is wanted on one line only, hence a newline should never be added
+        if (lineLength == -1) lineLength = length + 1;
+
         StringBuilder builder = new StringBuilder();
         for (int i=0; i<length; ++i) {
             if (i%lineLength==0) builder.append("\n");
