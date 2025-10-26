@@ -37,6 +37,17 @@ public class Chromosome {
     }
 
     /**
+     * Create a Chromosome from a String, where 1 correlates to a true bit at its index
+     * @param strGenotype the String of 1s and 0s representing a genotype
+     */
+    public Chromosome (String strGenotype) {
+        this.length = strGenotype.length();
+        for (int i=0; i<length; i++) {
+            setBit(i, strGenotype.charAt(i)=='1');
+        }
+    }
+
+    /**
      * TODO: add exception handling for out-of-bounds setting/getting <br>
      * Sets the bit at the specified index to the specified value
      * @param idx index of stored bit

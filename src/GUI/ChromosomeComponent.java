@@ -31,11 +31,15 @@ public class ChromosomeComponent extends JComponent {
         grid();
         repaint();
     }
-public void setChromosome(String chromosome) {
-        this.chromosome = chromosome;
-        grid();
-        repaint();
-}
+
+    /**
+     * Set the chromosome from a String of 1s and 0s
+     * @param strGenotype the String of 1s and 0s representing a genotype
+     */
+    public void setChromosome(String strGenotype) {
+        setChromosome(new Chromosome(strGenotype));
+    }
+
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -63,5 +67,8 @@ public void setChromosome(String chromosome) {
 
 
         }
+    }
+
+    public int getPixelSize() {
     }
 }
