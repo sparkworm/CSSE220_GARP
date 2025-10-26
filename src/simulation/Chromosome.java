@@ -97,6 +97,14 @@ public class Chromosome {
         return fragments;
     }
 
+    /**
+     * Mutates the chromosome with the given mutation rate
+     * @param mutationRate probability of each bit flipping (0.0 to 1.0)
+     */
+    public void mutate(double mutationRate) {
+        randomizeGenotype(mutationRate);
+    }
+
     public String toString() {
         return "Chromosome with genotype of length: " + length + "\n" + genotypeString();
     }
