@@ -15,6 +15,7 @@ public class PhenotypeComponent extends JComponent {
         this.phenotype = phenotype;
         this.terrain = terrain;
         this.tileSize = tileSize;
+        this.setPreferredSize(new Dimension(tileSize*terrain.getWidth(),tileSize*terrain.getHeight()));
     }
 
     @Override
@@ -37,8 +38,17 @@ public class PhenotypeComponent extends JComponent {
         ml.drawOn(g2);
     }
 
+    /**
+     * Creates a Color from the difficulty, using the ratio of difficulty to maxDifficulty as a value for the H value of
+     * HSB.
+     * TODO: make color decisions less hardcoded
+     * @param difficulty the difficulty of a given cell
+     * @param maxDifficulty the maximum theoretical difficulty.  CANNOT BE ZERO, but doesn't have to be
+     *                      below difficulty.
+     * @return
+     */
     protected Color calculateHSBForDifficulty(float difficulty, float maxDifficulty) {
-        return Color.getHSBColor(0.75F*difficulty/maxDifficulty + 0.33F, 1, 1);
+        return Color.getHSBColor(-0.4F*difficulty/maxDifficulty + 0.4F, 1, 1);
     }
 
 }

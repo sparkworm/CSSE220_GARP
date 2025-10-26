@@ -31,11 +31,12 @@ public class PathPhenotypeViewer extends JFrame {
 
     private void display() {
         setTitle("Phenotype Viewer");
-        setSize(tileSize*terrain.getWidth(),tileSize*terrain.getHeight());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Draw terrain
         add(new PhenotypeComponent(phenotype, terrain, tileSize));
+
+        pack();
 
         // Draw path lines
         setVisible(true);
