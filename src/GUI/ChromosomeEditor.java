@@ -18,7 +18,7 @@ public class ChromosomeEditor extends JFrame {
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
-//                this.setLayout(new BorderLayout());
+        // this.setLayout(new BorderLayout());
         this.chromosome = new Chromosome(100, true);
         this.chromosomeComponent = new ChromosomeComponent(this.chromosome);
         this.add(this.chromosomeComponent, BorderLayout.NORTH);
@@ -42,7 +42,7 @@ public class ChromosomeEditor extends JFrame {
         });
         buttonPanel.add(saveButton);
 
-        JButton mutateButton = new JButton("Load");
+        JButton mutateButton = new JButton("Mutate");
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mutateChromosome();
@@ -77,37 +77,37 @@ public class ChromosomeEditor extends JFrame {
 
         this.pack();
     }
-        private void loadChromosome() {
-            JFileChooser chooser = new JFileChooser();
-            if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+    private void loadChromosome() {
+        JFileChooser chooser = new JFileChooser();
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            this.chromosome = FileIO.readChromosomeFromFile(chooser.getSelectedFile());
+            this.chromosomeComponent.setChromosome(this.chromosome);
+
+            /* old design where errors were caught here instead of in FileIO
+
+            try {
                 this.chromosome = FileIO.readChromosomeFromFile(chooser.getSelectedFile());
                 this.chromosomeComponent.setChromosome(this.chromosome);
 
-                /* old design where errors were caught here instead of in FileIO
-
-                try {
-                    this.chromosome = FileIO.readChromosomeFromFile(chooser.getSelectedFile());
-                    this.chromosomeComponent.setChromosome(this.chromosome);
-
-                } catch (FileNotFoundException ex) {
+            } catch (FileNotFoundException ex) {
 //                    buttonPanel. ("Invalid file: " + ex.getMessage());
-                } catch (Exception ex) {
+            } catch (Exception ex) {
 //                    setStatus("Error loading: " + ex.getMessage());
-                }
-                */
-
             }
-
-        }
-        private void saveChromosome(){
-            System.out.println("Chromosome saved!");
+            */
 
         }
 
-        private void mutateChromosome(){
-            System.out.println("Chromosome mutated!");
+    }
+    private void saveChromosome(){
+        System.out.println("Chromosome saved!");
 
-        }
+    }
+
+    private void mutateChromosome(){
+        System.out.println("Chromosome mutated!");
+
+    }
 
 
 
