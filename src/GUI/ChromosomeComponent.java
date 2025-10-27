@@ -9,7 +9,6 @@ public class ChromosomeComponent extends JComponent {
 
     private Chromosome chromosome;
     private static final int pixel_size = 30;
-//    private static final int rows_cols = 10;
 
 
     public ChromosomeComponent(Chromosome chromosome) {
@@ -46,9 +45,6 @@ public class ChromosomeComponent extends JComponent {
         int length = chromosome.getLength();
         int rows_cols = (int) Math.sqrt(length);
 
-//        if (this.chromosome == null) {
-//            return;
-//        }
 
         for (int i = 0; i < length; i++) {
             int row = i / rows_cols;

@@ -20,18 +20,14 @@ public class ChromosomeEditor extends JFrame {
         this.setTitle("Chromosome Editor");
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout());
 
-// ADD THESE LINES:
-        this.statusLabel = new JLabel("Random chromosome (not saved)");
-        this.statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        this.statusLabel = new JLabel("Chromosome (not saved)");
         this.add(this.statusLabel, BorderLayout.NORTH);
 
         this.chromosome = new Chromosome(100, true);
         this.chromosomeComponent = new ChromosomeComponent(this.chromosome);
 
         JPanel buttonPanel = new JPanel();
-
 
         JButton loadButton = new JButton("Load");
         loadButton.addActionListener(new ActionListener() {
@@ -110,7 +106,7 @@ public class ChromosomeEditor extends JFrame {
                 this.chromosome = FileIO.readChromosomeFromFile(chooser.getSelectedFile());
                 this.chromosomeComponent.setChromosome(this.chromosome);
                 System.out.println("Chromosome loaded!");
-                this.statusLabel.setText("Loaded: " + chooser.getSelectedFile().getName());  // ADD THIS
+                this.statusLabel.setText("Loaded: " + chooser.getSelectedFile().getName());
                 this.pack();
             } else {
                 JOptionPane.showMessageDialog(this,
