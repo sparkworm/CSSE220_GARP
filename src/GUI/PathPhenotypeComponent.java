@@ -9,12 +9,14 @@ import java.awt.*;
 public class PathPhenotypeComponent extends JComponent {
     private PathPhenotype phenotype;
     private TerrainGrid terrain;
+    private Font font;
     private int tileSize;
 
     public PathPhenotypeComponent(PathPhenotype phenotype, TerrainGrid terrain, int tileSize) {
         this.phenotype = phenotype;
         this.terrain = terrain;
         this.tileSize = tileSize;
+        this.font = new Font("SansSerif", Font.PLAIN, 18);
         this.setPreferredSize(new Dimension(tileSize*terrain.getWidth(),tileSize*terrain.getHeight()));
     }
 
@@ -22,13 +24,13 @@ public class PathPhenotypeComponent extends JComponent {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D g2 = (Graphics2D) graphics;
-
+        g2.setFont(font);
         for (int x=0; x<terrain.getWidth(); x++) {
             for (int y=0; y<terrain.getHeight(); y++) {
 
                 g2.setColor(calculateHSBForDifficulty(terrain.getDifficultAtCoord(x,y), 10));
                 g2.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
-                g2.setColor(Color.WHITE);
+                g2.setColor(Color.BLACK);
                 g2.drawString(terrain.getDifficultAtCoord(x,y) + "", x*tileSize + tileSize/2, y*tileSize + tileSize/2);
             }
         }
