@@ -1,11 +1,13 @@
 package simulation;
 
 import java.util.BitSet;
+import java.util.Random;
 
 /**
  * Class responsible for storing a genotype and reading/writing to it.
  */
 public class Chromosome {
+    Random random;
     /**
      * The length of genotype is stored in this field since BitSet.length() will differ depending on what is stored: if
      * empty, BitSet.length() will simply be 0
@@ -20,6 +22,7 @@ public class Chromosome {
      * @param genotype the specific genotype that this Chromosome will possess
      */
     public Chromosome(int length, BitSet genotype) {
+        this.random = new Random();
         this.length = length;
         this.genotype = genotype;
     }
@@ -29,6 +32,7 @@ public class Chromosome {
      * @param length the length of the Chromosome's genotype in bits
      */
     public Chromosome (int length, boolean randomize) {
+        this.random = new Random();
         this.length = length;
         this.genotype = new BitSet(length);
         if (randomize) {
@@ -37,10 +41,26 @@ public class Chromosome {
     }
 
     /**
+     * Creates a Chromosome with a specified random object, presumably so that the same random could be shared by
+     * multiple Chromosomes for a seeded population.
+     * <br>NOTE: the current implementation will also use the specified Random for mutation, so evolution will also be
+     * deterministic.
+     * @param length the number of bits in the genome
+     * @param random a random object used for randomizing the Chromosome's genotype.
+     */
+    public Chromosome (int length, Random random) {
+        this.random = random;
+        this.length = length;
+        this.genotype = new BitSet(length);
+        randomizeGenotype(0.5);
+    }
+
+    /**
      * Create a Chromosome from a String, where 1 correlates to a true bit at its index
      * @param strGenotype the String of 1s and 0s representing a genotype
      */
     public Chromosome (String strGenotype) {
+        this.random = new Random();
         this.length = strGenotype.length();
         this.genotype = new BitSet(strGenotype.length());
         for (int i=0; i<length; i++) {
@@ -74,8 +94,7 @@ public class Chromosome {
      */
     public void randomizeGenotype(double flipChance) {
         for (int i=0; i<length; i++) {
-            double rand = Math.random();
-            if (flipChance > Math.random()) {
+            if (flipChance > random.nextDouble()) {
                 genotype.flip(i);
             }
         }
