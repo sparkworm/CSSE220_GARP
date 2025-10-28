@@ -4,6 +4,7 @@ import simulation.pathfinding.PathPhenotype;
 import simulation.pathfinding.TerrainGrid;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Window for viewing phenotype.
@@ -16,6 +17,7 @@ public class PathPhenotypeViewer extends JFrame {
     private PathPhenotype phenotype;
     private TerrainGrid terrain;
     private PathPhenotypeComponent pathPhenotypeComponent;
+    private JLabel infoLabel;
     // The length of one edge of any square tile
     private int tileSize;
 
@@ -23,22 +25,40 @@ public class PathPhenotypeViewer extends JFrame {
         this.phenotype = phenotype;
         this.terrain = terrain;
         this.tileSize = DEFAULT_TILE_SIZE;
-        display();
+
+        // setup
+        this.pathPhenotypeComponent = new PathPhenotypeComponent(phenotype, terrain, tileSize);
+        this.infoLabel = new JLabel();
+        updateInfoLabelText();
+        displaySetup();
     }
     public PathPhenotypeViewer(PathPhenotype phenotype) {
         this(phenotype, new TerrainGrid());
     }
 
-    private void display() {
+    /**
+     * Sets title, adds components, and packs.
+     */
+    private void displaySetup() {
         setTitle("Phenotype Viewer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Draw terrain
-        add(new PathPhenotypeComponent(phenotype, terrain, tileSize));
+        // Display path cost.
+        add(infoLabel, BorderLayout.NORTH);
+        // Display terrain and path therethrough
+        add(pathPhenotypeComponent, BorderLayout.CENTER);
 
         pack();
-
-        // Draw path lines
         setVisible(true);
+    }
+
+    public void setPhenotype(PathPhenotype newPhenotype) {
+        this.phenotype = newPhenotype;
+        this.pathPhenotypeComponent.setPhenotype(phenotype);
+        updateInfoLabelText();
+    }
+
+    public void updateInfoLabelText() {
+        infoLabel.setText(String.format("Cost: %d", terrain.calculatePathCost(phenotype.getPathArray())));
     }
 }

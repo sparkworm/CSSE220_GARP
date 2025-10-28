@@ -20,6 +20,11 @@ public class PathPhenotypeComponent extends JComponent {
         this.setPreferredSize(new Dimension(tileSize*terrain.getWidth(),tileSize*terrain.getHeight()));
     }
 
+    public void setPhenotype(PathPhenotype newPhenotype) {
+        this.phenotype = newPhenotype;
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
