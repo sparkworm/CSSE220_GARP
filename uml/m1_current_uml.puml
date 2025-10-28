@@ -1,0 +1,183 @@
+@startuml
+class simulation.pathfinding.TerrainFitness {
+}
+class simulation.pathfinding.TerrainGrid {
+- {static} int[][] DEFAULT_COST_GRID
+~ int[][] costGrid
+~ Vector2Int startingPos
+~ Vector2Int targetPos
++ int calculatePathCost(Vector2Int[])
++ Vector2Int[] getPositionArray(Vector2Int[])
++ int getDifficultAtCoord(Vector2Int)
++ int getDifficultAtCoord(int,int)
+- void boundPos(Vector2Int)
++ String toString()
++ int getWidth()
++ int getHeight()
+}
+simulation.pathfinding.TerrainGrid -> utility.Vector2Int
+
+
+class simulation.Population {
+~ ArrayList<Chromosome> chromosomes
++ void mutateChromosomes(Mutation)
++ double calculateDiversity()
+}
+
+
+class utility.Vector2Int {
+- int x
+- int y
++ Vector2Int opposite()
++ {static} Vector2Int add(Vector2Int,Vector2Int)
++ void increaseBy(Vector2Int)
++ int manhattanLength()
++ int getY()
++ void setY(int)
++ int getX()
++ void setX(int)
++ void setXY(int,int)
++ Vector2Int clone()
++ String toString()
+}
+
+
+class simulation.Selection {
+}
+class utility.FileIO {
++ {static} Chromosome readChromosomeFromFile(File)
++ {static} void writeChromosomeToFile(Chromosome,File)
+}
+
+class GUI.PathPhenotypeViewer {
++ {static} int DEFAULT_TILE_SIZE
+- PathPhenotype phenotype
+- TerrainGrid terrain
+- PathPhenotypeComponent pathPhenotypeComponent
+- JLabel infoLabel
+- int tileSize
+- void displaySetup()
++ void setPhenotype(PathPhenotype)
++ void updateInfoLabelText()
+}
+GUI.PathPhenotypeViewer -> simulation.pathfinding.PathPhenotype
+GUI.PathPhenotypeViewer -> simulation.pathfinding.TerrainGrid
+GUI.PathPhenotypeViewer -> GUI.PathPhenotypeComponent
+
+
+class simulation.EvolutionSimulator {
+- int generation
+- boolean crossoverActive
+- Population population
+- Selection selection
+- Crossover crossover
+- Mutation mutation
+- Fitness fitness
++ void runSimulation(int)
++ void simulateGeneration()
+}
+simulation.EvolutionSimulator --> simulation.Population
+simulation.EvolutionSimulator --> simulation.Selection
+simulation.EvolutionSimulator --> simulation.Crossover
+simulation.EvolutionSimulator --> simulation.Mutation
+simulation.EvolutionSimulator --> simulation.Fitness
+
+abstract class simulation.Phenotype {
+}
+
+class GUI.ChromosomeViewer {
+}
+class GUI.PathPhenotypeComponent {
+- PathPhenotype phenotype
+- TerrainGrid terrain
+- Font font
+- int tileSize
++ void setPhenotype(PathPhenotype)
+# void paintComponent(Graphics)
+# Color calculateHSBForDifficulty(float,float)
+}
+GUI.PathPhenotypeComponent -> simulation.pathfinding.PathPhenotype
+GUI.PathPhenotypeComponent -> simulation.pathfinding.TerrainGrid
+
+class simulation.Chromosome {
+- int length
+- BitSet genotype
++ void setBit(int,boolean)
++ boolean getBit(int)
++ void randomizeGenotype(double)
++ BitSet[] getGenotypeFragments(int)
++ void mutate(double)
++ String toString()
++ String genotypeString(int)
++ String genotypeString()
++ int getLength()
+}
+
+
+class GUI.MultiLine {
++ {static} float DEFAULT_WIDTH
++ {static} Color DEFAULT_COLOR
+- Vector2Int[] positionArray
+- int lengthMultplier
+- Stroke stroke
+- Color color
++ void drawOn(Graphics2D)
+}
+GUI.MultiLine -> "*" utility.Vector2Int
+
+
+class simulation.Mutation {
+}
+abstract class simulation.Fitness {
+}
+class simulation.pathfinding.PathPhenotype {
+- Vector2Int[] pathArray
+- void calculatePathArray(Chromosome)
+- Vector2Int directionFromData(boolean,boolean)
++ Vector2Int[] getPathArray()
++ String toString()
+}
+simulation.pathfinding.PathPhenotype -> "*" utility.Vector2Int
+
+class simulation.Crossover {
+}
+class mainApp.MainApp {
+- void runApp()
++ {static} void main(String[])
++ void phenotypeViewer()
+}
+
+class GUI.ChromosomeEditor {
+- Chromosome chromosome
+- ChromosomeComponent chromosomeComponent
+- JTextField mutationField
+- JLabel statusLabel
+- void loadChromosome()
+- void saveChromosome()
+- void mutateChromosome()
++ {static} void main(String[])
+}
+GUI.ChromosomeEditor -> simulation.Chromosome
+GUI.ChromosomeEditor --> GUI.ChromosomeComponent
+
+
+class GUI.ChromosomeComponent {
+- Chromosome chromosome
+- {static} int pixel_size
++ void grid()
++ void setChromosome(Chromosome)
++ void setChromosome(String)
+# void paintComponent(Graphics)
++ int getPixelSize()
++ Chromosome getChromosome()
+}
+GUI.ChromosomeComponent -> simulation.Chromosome
+
+
+GUI.JFrame <|-- GUI.PathPhenotypeViewer
+GUI.JComponent <|-- GUI.PathPhenotypeComponent
+simulation.Phenotype <|-- simulation.pathfinding.PathPhenotype
+javax.swing.JComponent <|-- mainApp.DemoImageComponent
+GUI.JFrame <|-- GUI.ChromosomeEditor
+GUI.JComponent <|-- GUI.ChromosomeComponent
+@enduml
