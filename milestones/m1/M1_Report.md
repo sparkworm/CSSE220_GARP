@@ -1,35 +1,30 @@
 # CSSE 220 Milestone 1 Report
 *Use this template for your M1, M2, M3, and M4 reports.*
 
-**Project Title**: TODO
+**Project Title**: GARP Team ( Research project)
 
 **Team Name**: TODO
 
-**Team ID**: TODO
+**Team ID**: f25r301
 
 **Team Members and Role(s) for this Milestone**: 
-- Charlie (charlie1), Reviewer $\to$ Navigator
-- Brandon (brandon2), Navigator $\to$ Driver
-- Allison (allison3), Driver $\to$ Tester
-- Dani (dani4), Tester $\to$ Reviewer
+- David Clutter (clutterda) $\to$ Tasks 2,3,8,9
+- Baruni Cherukuri (cherukbj) $\to$ Tasks 4,5,6,7
 
 ---
 ## Section 1: Progress Summary and Individual Contributions
-*TODO for Driver: Give a high-level summary of your team's progress on this milestone. Did you accomplish all planned tasks? If not, which ones did you fully complete, and which ones still need some work? How far along are the incomplete tasks?*
-
+*TODO for Driver: Finished Milestone1 related tasks completely 
 
 *TODO for Driver: List the role, main contributions, and estimations of time spent working on the project as a group (2 or more) and individually (working alone).*
 
 
-| Name    | Role      | Main Contribution(s)                                                         | Est. Hours with Group | Est. Hours Individually |
-| ------- | --------- | ---------------------------------------------------------------------------- | --------------------- | ----------------------- |
-| Charlie | Reviewer  | First Draft of UML<br>identified a bug in code (null)<br>Completed M1 report | 2 hours               | 2 hours                 |
-| Brandon | Navigator | Pair programmed<br>Set meeting agendas                                       | 4 hours               | 1 hour                  |
-| Allison | Driver    | Pair programmed<br>Scheduled group meetings                                  | 4 hours               | 1 hour                  |
-| Dani    | Tester    | Wrote JUnit tests                                                            | 2 hours               | 2 hours                 |
+| Name   | Role      | Main Contribution(s)                                                                 | Est. Hours with Group | Est. Hours Individually |
+|--------|-----------|--------------------------------------------------------------------------------------|-----------------------|-------------------------|
+| David  | Driver    | Tasks 2,3,8,9 Draft of UML<br>identified a bug in code (null)<br>Completed M1 report | 1 hours               | 4 hours                 |
+| Baruni | Tester    | Tasks 4,5,6,7                                                      | 1 hours               | 4 hours                 |
 
 *TODO for Driver: Provide a direct link to your project repo's contributions page here, with the dates for this milestone selected. It will look something like this:
-`https://github.com/rhit-csse220/csse220-TERM-final-project-team-TEAM_NAME/graphs/contributors?from=2022-02-09&to=2022-02-26&type=c`*
+https://github.com/rhit-csse220/csse220-fall-2025-2026-final-project-f25r301
 
 *This can be found by going to your team repo and then selecting
 Insights->Contributors from the top menu
