@@ -44,4 +44,14 @@ public class Population {
         System.err.println("calculateDiversity not yet implemented");
         return Double.NaN;
     }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder(String.format("Population with %d chromosomes:\n\n", chromosomes.size()));
+
+        for (Chromosome c : chromosomes) {
+            builder.append(c.toString() + "\n");
+        }
+
+        return builder.toString();
+    }
 }
