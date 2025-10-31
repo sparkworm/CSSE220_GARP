@@ -50,6 +50,15 @@ public class Vector2Int {
         return Math.abs(x) + Math.abs(y);
     }
 
+    /**
+     * Returns the sum of the magnitude of the x distance and y distance to other vector.
+     * @param other vector to compare
+     * @return value >= 0
+     */
+    public int manhattanDistance(Vector2Int other) {
+        return Math.abs(x-other.getX()) + Math.abs(y-other.getY());
+    }
+
     public int getY() {
         return y;
     }
@@ -75,7 +84,12 @@ public class Vector2Int {
         return new Vector2Int(x, y);
     }
 
+    @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
+    }
+
+    public boolean equals(Vector2Int other) {
+        return other.getX() == x && other.getY() == y;
     }
 }

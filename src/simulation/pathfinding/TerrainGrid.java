@@ -2,6 +2,8 @@ package simulation.pathfinding;
 
 import utility.Vector2Int;
 
+import java.util.ArrayList;
+
 public class TerrainGrid {
 
     // Note that this would actually appear be inverted such that row=column and column=row
@@ -25,12 +27,12 @@ public class TerrainGrid {
     /**
      * The position from which the path should start.
      */
-    Vector2Int startingPos;
+    private Vector2Int startingPos;
     /**
      * The position of the target on the terrain grid.  Used here because once a path reaches the target, its cost
      * calculation is terminated.
      */
-    Vector2Int targetPos;
+    private Vector2Int targetPos;
 
     public TerrainGrid(Vector2Int startingPos, Vector2Int targetPos) {
         this.costGrid = DEFAULT_COST_GRID;
@@ -38,7 +40,8 @@ public class TerrainGrid {
         this.targetPos = targetPos;
     }
     public TerrainGrid() {
-        this(new Vector2Int(0,0), new Vector2Int(DEFAULT_COST_GRID.length, DEFAULT_COST_GRID[0].length));
+        //this(new Vector2Int(0,0), new Vector2Int(DEFAULT_COST_GRID.length, DEFAULT_COST_GRID[0].length));
+        this(new Vector2Int(0,0), new Vector2Int(1,1));
     }
 
     /**
@@ -54,6 +57,7 @@ public class TerrainGrid {
             boundPos(currentPos);
             // Note that if the currentIndex hasn't changed (do to going out of bounds) the cost is still added
             cost += getDifficultAtCoord(currentPos);
+            if (currentPos.equals(targetPos)) return cost; // abort if the goal is reached
         }
         return cost;
     }
@@ -66,14 +70,16 @@ public class TerrainGrid {
      * @param path the path that is attempted
      * @return the positions that the path leads to
      */
-    public Vector2Int[] getPositionArray(Vector2Int[] path) {
-        Vector2Int[] posArray = new Vector2Int[path.length]; // posArray will be 1 greater in length than path
+    public ArrayList<Vector2Int> getPositionArray(Vector2Int[] path) {
+        ArrayList<Vector2Int> posArray = new ArrayList<>(path.length); // posArray may be 1 greater in length than path
+        //Vector2Int[] posArray = new Vector2Int[path.length];
         Vector2Int currentPos = startingPos.clone();
-        posArray[0] = currentPos.clone();
-        for (int i=1; i<posArray.length; i++) {
+        posArray.add(currentPos.clone());
+        for (int i=1; i<path.length; i++) {
             currentPos.increaseBy(path[i-1]);
             boundPos(currentPos);
-            posArray[i] = currentPos.clone();
+            posArray.add(currentPos.clone());
+            if (currentPos.equals(targetPos)) return posArray;
         }
         return posArray;
     }
@@ -127,4 +133,6 @@ public class TerrainGrid {
     public int getHeight() {
         return costGrid[0].length;
     }
+
+    public Vector2Int getTargetPos() {return targetPos;}
 }

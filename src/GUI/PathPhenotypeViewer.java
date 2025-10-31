@@ -1,5 +1,6 @@
 package GUI;
 
+import simulation.pathfinding.PathFitness;
 import simulation.pathfinding.PathPhenotype;
 import simulation.pathfinding.TerrainGrid;
 
@@ -17,6 +18,7 @@ public class PathPhenotypeViewer extends JFrame {
     private PathPhenotype phenotype;
     private TerrainGrid terrain;
     private PathPhenotypeComponent pathPhenotypeComponent;
+    private PathFitness fitnessCalculator;
     private JLabel infoLabel;
     // The length of one edge of any square tile
     private int tileSize;
@@ -24,6 +26,7 @@ public class PathPhenotypeViewer extends JFrame {
     public PathPhenotypeViewer(PathPhenotype phenotype, TerrainGrid terrain) {
         this.phenotype = phenotype;
         this.terrain = terrain;
+        this.fitnessCalculator = new PathFitness(terrain);
         this.tileSize = DEFAULT_TILE_SIZE;
 
         // setup
@@ -59,6 +62,9 @@ public class PathPhenotypeViewer extends JFrame {
     }
 
     public void updateInfoLabelText() {
-        infoLabel.setText(String.format("Cost: %d", terrain.calculatePathCost(phenotype.getPathArray())));
+        infoLabel.setText(String.format("Cost: %d        Fitness: %.2f",
+                terrain.calculatePathCost(phenotype.getPathArray()),
+                fitnessCalculator.calculateFitness(phenotype)
+        ));
     }
 }
