@@ -63,4 +63,11 @@ public class ChromosomeTest extends TestCase {
         assertEquals(chrom1.genotypeString(5), "00101\n01010");
         assertEquals(chrom1.genotypeString(2), "00\n10\n10\n10\n10");
     }
+
+    public void testHammingDistance() {
+        assertEquals(0, chrom1.hammingDistance(chrom1));
+        Chromosome newChrom = new Chromosome(chrom1.genotypeString(-1));
+        newChrom.mutate(1.0);
+        assertEquals(chrom1.getLength(), newChrom.hammingDistance(chrom1));
+    }
 }

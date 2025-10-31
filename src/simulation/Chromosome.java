@@ -124,6 +124,21 @@ public class Chromosome {
         randomizeGenotype(mutationRate);
     }
 
+    /**
+     * Calculates the hamming distance between this and another Chromosome
+     * @param other The other Chromosome that this is being compared to
+     * @return number of bits that would need to be flipped to change other Chromosome to this Chromosome
+     */
+    public int hammingDistance(Chromosome other) {
+        int count = 0;
+        for (int i=0; i<length; i++) {
+            if (getBit(i)!=other.getBit(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public String toString() {
         return "Chromosome with genotype of length: " + length + "\n" + genotypeString();
     }
