@@ -16,6 +16,14 @@ public class Chromosome {
     private BitSet genotype;
 
     /**
+     * Create a deep copy from the other chromosome.
+     * @param other the chromosome to be copied
+     */
+    public Chromosome(Chromosome other) {
+        this(other.genotypeString(-1));
+    }
+
+    /**
      * Create a Chromosome with the specified genotype.  Mostly for debugging, as there will not really be a way to
      * access genotypes outside Chromosome.
      * @param length the length of the Chromosome's genotype in bits
