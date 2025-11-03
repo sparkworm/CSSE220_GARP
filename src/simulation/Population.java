@@ -5,6 +5,7 @@ import java.util.Random;
 
 /**
  * Class responsible for managing the set of Chromosomes being evolved.
+ * NOTE: design is a bit sketchy at the moment; the existence of getChromosomes() function may be a bad sign.
  */
 public class Population {
     ArrayList<Chromosome> chromosomes;
@@ -57,5 +58,13 @@ public class Population {
 
     public int getSize() {
         return chromosomes.size();
+    }
+
+    /**
+     * This may not be a good design, as it means things are operating on the population outside of itself.
+     * @return
+     */
+    public ArrayList<Chromosome> getChromosomes() {
+        return this.chromosomes;
     }
 }
