@@ -16,11 +16,12 @@ public class Chromosome {
     private BitSet genotype;
 
     /**
-     * Create a deep copy from the other chromosome.
+     * Creates deep copy of other's genotype, but keeps a reference to the specified Random object
      * @param other the chromosome to be copied
      */
     public Chromosome(Chromosome other) {
         this(other.genotypeString(-1));
+        this.random = other.getRandom();
     }
 
     /**
@@ -174,5 +175,13 @@ public class Chromosome {
 
     public int getLength() {
         return this.length;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
+    public Random getRandom() {
+        return this.random;
     }
 }

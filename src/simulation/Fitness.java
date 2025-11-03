@@ -1,7 +1,8 @@
 package simulation;
 
+/**
+ * Abstract class housing the calculateFitness function
+ */
 public abstract class Fitness {
-    public double calculateFitness(Chromosome chromosome) {
-        return Double.NaN;
-    }
+    public abstract double calculateFitness(Chromosome chromosome);
 }

@@ -11,8 +11,8 @@ public class FitnessMatchTarget extends Fitness {
     }
 
     /**
-     *
-     * @param chromosome must be the same length as
+     * Calculates fitness according to class specifications
+     * @param chromosome must be the same length as baseChromosome
      * @return a value between 0.0 and 1.0 (inclusive)
      */
     @Override

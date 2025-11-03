@@ -9,6 +9,7 @@ import java.util.Random;
  */
 public class Population {
     ArrayList<Chromosome> chromosomes;
+    Random random;
 
     public Population(int numChromosomes, int chromosomeSize) {
         chromosomes = new ArrayList<>(numChromosomes);
@@ -18,7 +19,7 @@ public class Population {
     }
     public Population(int numChromosomes, int chromosomeSize, long seed) {
         chromosomes = new ArrayList<>(numChromosomes);
-        Random random = new Random(seed);
+        this.random = new Random(seed);
         for (int i=0; i<numChromosomes; i++) {
             chromosomes.add(new Chromosome(chromosomeSize, random));
         }
@@ -46,6 +47,19 @@ public class Population {
         return Double.NaN;
     }
 
+    /**
+     * Finds the average fitness of the entire population.
+     * @param fitness the method by which fitness is determined
+     * @return the average fitness
+     */
+    public double calculateAverageFitness(Fitness fitness) {
+        double totalFitness = 0.0;
+        for (Chromosome chrom : chromosomes) {
+            totalFitness += fitness.calculateFitness(chrom);
+        }
+        return totalFitness / chromosomes.size();
+    }
+
     public String toString() {
         StringBuilder builder = new StringBuilder(String.format("Population with %d chromosomes:\n\n", chromosomes.size()));
 
@@ -61,10 +75,34 @@ public class Population {
     }
 
     /**
+     * Adds the specified chromosomes to the population.  Useful for introducing elites after mutation has been applied
+     * to others.
+     * @param chromosomesToAdd Chromosomes that will be appended to chromosomes
+     */
+    public void addChromosomes(ArrayList<Chromosome> chromosomesToAdd) {
+        chromosomes.addAll(chromosomesToAdd);
+    }
+
+    /**
      * This may not be a good design, as it means things are operating on the population outside of itself.
      * @return
      */
     public ArrayList<Chromosome> getChromosomes() {
         return this.chromosomes;
+    }
+
+    public void setChromosomes(ArrayList<Chromosome> chromosomes) {
+        this.chromosomes = chromosomes;
+    }
+
+    /**
+     * @return the Random object used by all constituent chromosomes
+     */
+    public Random getRandom() {
+        return this.random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
     }
 }

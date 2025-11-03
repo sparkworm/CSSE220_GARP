@@ -1,5 +1,7 @@
 package simulation;
 
+import java.util.ArrayList;
+
 /**
  * Class responsible for simulating the steps of evolution of a population.
  */
@@ -7,16 +9,34 @@ public class EvolutionSimulator {
     private int generation;
     private boolean crossoverActive;
     private double surviveRatio;
+    /**
+     * The number of top individuals that will not undergo mutation.
+     * MUST NOT EXCEED THE SIZE OF POPULATION
+     */
+    private int eliteSurvivors;
     private Population population;
     private Fitness fitness;
     private Selection selection;
     private Crossover crossover;
     private Mutation mutation;
 
-    public EvolutionSimulator(int genotypeSize, int populationSize, double mutationRate, double surviveRatio) {
+    EvolutionSimulator(int genotypeSize, int populationSize, int eliteSurvivors, double mutationRate, double surviveRatio, long seed) {
         this.generation = 0;
         this.crossoverActive = false; // change when crossover is more stable
         this.surviveRatio = surviveRatio;
+        this.eliteSurvivors = eliteSurvivors;
+        this.population = new Population(populationSize, genotypeSize, seed); // create random population of specified size
+        this.fitness = new FitnessMaxOnes();  // TODO: replace with real fitness function
+        this.selection = new Selection(fitness);
+        this.crossover = new Crossover();  // TODO: implement real crossover for when crossoverActive==true
+        this.mutation = new Mutation(mutationRate);
+    }
+
+    public EvolutionSimulator(int genotypeSize, int populationSize, int eliteSurvivors, double mutationRate, double surviveRatio) {
+        this.generation = 0;
+        this.crossoverActive = false; // change when crossover is more stable
+        this.surviveRatio = surviveRatio;
+        this.eliteSurvivors = eliteSurvivors;
         this.population = new Population(populationSize, genotypeSize); // create random population of specified size
         this.fitness = new FitnessMaxOnes();  // TODO: replace with real fitness function
         this.selection = new Selection(fitness);
@@ -41,12 +61,27 @@ public class EvolutionSimulator {
      * Increments generation.
      */
     public void simulateGeneration() {
+        System.out.printf("Generation %d of fitness %.2f:  %s%n",
+                generation,
+                population.calculateAverageFitness(fitness),
+//                population.toString()));
+                "");
         generation++;
         // Create new population from the fittest
-        population = new Population(crossover.repopulate(selection.trunctationSelection(population.getChromosomes(), surviveRatio), population.getSize()));
+        ArrayList<Chromosome> survivors = selection.trunctationSelection(population.getChromosomes(), surviveRatio);
+        ArrayList<Chromosome> elites = new ArrayList<>(eliteSurvivors);
+        for (int i=0; i<eliteSurvivors; i++) { // works because survivors is in descending order
+            elites.add(new Chromosome(survivors.getFirst()));
+            //survivors.removeFirst();
+        }
+        System.out.println("Fittest Chromosome: " + fitness.calculateFitness(elites.get(0)) );// + "\n\n");
+        ArrayList<Chromosome> newPop = crossover.repopulate(survivors, population.getSize()-eliteSurvivors);
+        //newPop.addAll(elites);
+//        population = new Population(newPop);
+        population.setChromosomes(newPop);
         // Mutate new population
         mutation.mutateChromosomes(population.getChromosomes());
-        System.out.println(String.format("Population, generation %d:  %s", generation, population.toString()));
+        population.addChromosomes(elites);
     }
 
     public void setMutationRate(double mutationRate) {
