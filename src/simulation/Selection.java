@@ -22,18 +22,12 @@ public class Selection {
      */
     public ArrayList<Chromosome> trunctationSelection(ArrayList<Chromosome> population, double surviveRatio) {
         ArrayList<Chromosome> popCopy = new ArrayList<>(population);
-        // Cover potential edge case where there is only
-//        if (population.size() < 2) {
-//            if (surviveRatio >= 0.5) return population;
-//            else return new ArrayList<Chromosome>();
-//        }
 
         int numSurvivors = (int)(population.size() * surviveRatio);
         numSurvivors += (numSurvivors / surviveRatio < population.size()) ? 1 : 0;
         ArrayList<Chromosome> survivors = new ArrayList<>(numSurvivors);
         ArrayList<Double> fitnesses = new ArrayList<>(numSurvivors);
         ArrayList<Double> sortedFitness = new ArrayList<>(numSurvivors);
-        // TODO FINISH THIS FUNCTION
         for (Chromosome chrom : population) {
             Double fit = fitness.calculateFitness(chrom);
             fitnesses.add(fit);
