@@ -54,4 +54,8 @@ public class Population {
 
         return builder.toString();
     }
+
+    public int getSize() {
+        return chromosomes.size();
+    }
 }
