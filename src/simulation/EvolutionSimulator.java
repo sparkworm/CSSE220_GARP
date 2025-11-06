@@ -1,5 +1,7 @@
 package simulation;
 
+import GUI.FitnessPlotComponent;
+
 import java.util.ArrayList;
 
 /**
@@ -9,6 +11,8 @@ public class EvolutionSimulator {
     private int generation;
     private boolean crossoverActive;
     private double surviveRatio;
+    private FitnessPlotComponent plot;
+
     /**
      * The number of top individuals that will not undergo mutation.
      * MUST NOT EXCEED THE SIZE OF POPULATION
@@ -47,10 +51,12 @@ public class EvolutionSimulator {
     /**
      * Runs the simulation for the provided number of generations.  <br>
      * May break out if the end condition is reached sooner
+     *
      * @param numGenerations the number of generations that this simulatio will be run for.  Should be at least 0.
      */
     public void runSimulation(int numGenerations) {
-        for (int i=0; i<numGenerations; i++) {
+        if (plot != null) plot.clear();
+        for (int i = 0; i < numGenerations; i++) {
             simulateGeneration();
         }
     }
@@ -70,23 +76,50 @@ public class EvolutionSimulator {
         // Create new population from the fittest
         ArrayList<Chromosome> survivors = selection.trunctationSelection(population.getChromosomes(), surviveRatio);
         ArrayList<Chromosome> elites = new ArrayList<>(eliteSurvivors);
-        for (int i=0; i<eliteSurvivors; i++) { // works because survivors is in descending order
+        for (int i = 0; i < eliteSurvivors; i++) { // works because survivors is in descending order
             elites.add(new Chromosome(survivors.getFirst()));
             //survivors.removeFirst();
         }
-        System.out.println("Fittest Chromosome: " + fitness.calculateFitness(elites.get(0)) );// + "\n\n");
-        ArrayList<Chromosome> newPop = crossover.repopulate(survivors, population.getSize()-eliteSurvivors);
+        System.out.println("Fittest Chromosome: " + fitness.calculateFitness(elites.get(0)));// + "\n\n");
+        ArrayList<Chromosome> newPop = crossover.repopulate(survivors, population.getSize() - eliteSurvivors);
         //newPop.addAll(elites);
 //        population = new Population(newPop);
         population.setChromosomes(newPop);
         // Mutate new population
         mutation.mutateChromosomes(population.getChromosomes());
         population.addChromosomes(elites);
-    }
-    public Population getPopulation() { return population; }
-    public Fitness getFitness() { return fitness; }
-    public int getGeneration() { return generation; }
+        if (plot != null) {
+            double best  = Double.NEGATIVE_INFINITY;
+            double worst = Double.POSITIVE_INFINITY;
+            double sum   = 0.0;
 
+            for (Chromosome c : population.getChromosomes()) {
+                double f = fitness.calculateFitness(c);
+                if (f > best)  best = f;
+                if (f < worst) worst = f;
+                sum += f;
+            }
+            double avg = sum / population.getSize();
+
+            plot.addData(generation, best, avg, worst);
+        }
+    }
+
+    public Population getPopulation() {
+        return population;
+    }
+
+    public Fitness getFitness() {
+        return fitness;
+    }
+
+    public int getGeneration() {
+        return generation;
+    }
+    public void attachPlot(FitnessPlotComponent plot) {
+        this.plot = plot;
+        if (this.plot != null) this.plot.clear();
+    }
 
     public void setMutationRate(double mutationRate) {
         mutation.setMutationRate(mutationRate);
