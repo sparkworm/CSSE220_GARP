@@ -5,7 +5,7 @@ import java.awt.*;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-public class FitnessPlotComponent extends JFrame {
+public class FitnessPlotComponent extends JComponent {
     private ArrayList<Integer> generations;
     private ArrayList<Double> bestFitness;
     private ArrayList<Double> avgFitness;
@@ -16,10 +16,11 @@ public class FitnessPlotComponent extends JFrame {
     private final Color Best_color = new Color(34, 139, 34);    //
 
     public FitnessPlotComponent() {
-        setTitle("Fitness over Generations");
-        setSize(400, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
+//        setTitle("Fitness over Generations");
+//        setSize(400, 600);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setVisible(true);
+        setPreferredSize(new Dimension(400, 600));
 
         generations = new ArrayList<>();
         bestFitness = new ArrayList<>();
@@ -60,8 +61,8 @@ public class FitnessPlotComponent extends JFrame {
 
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponents(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         int w = getWidth();
         int h = getHeight();
