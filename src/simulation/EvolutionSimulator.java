@@ -83,6 +83,10 @@ public class EvolutionSimulator {
         mutation.mutateChromosomes(population.getChromosomes());
         population.addChromosomes(elites);
     }
+    public Population getPopulation() { return population; }
+    public Fitness getFitness() { return fitness; }
+    public int getGeneration() { return generation; }
+
 
     public void setMutationRate(double mutationRate) {
         mutation.setMutationRate(mutationRate);
