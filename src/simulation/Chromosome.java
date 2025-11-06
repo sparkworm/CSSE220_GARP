@@ -36,6 +36,12 @@ public class Chromosome {
         this.genotype = genotype;
     }
 
+    public Chromosome(int length, BitSet genotype, Random random) {
+        this.length = length;
+        this.genotype = genotype;
+        this.random = random;
+    }
+
     /**
      * Create a Chromosome with a genotype of specified size.  All bits are initially false.
      * @param length the length of the Chromosome's genotype in bits
@@ -183,5 +189,20 @@ public class Chromosome {
 
     public Random getRandom() {
         return this.random;
+    }
+
+    /**
+     * Creates a new Chromosome with a genotype that is equal to this.genotype up to (not including) splicePoint, during
+     * and after which it is equal to other.genotype
+     * @param other
+     * @param splicePoint
+     * @return
+     */
+    public Chromosome spliceChromosomeWithOther(Chromosome other, int splicePoint) {
+        BitSet newGenotype = this.genotype.get(0, splicePoint);
+        for (int i=other.genotype.nextSetBit(splicePoint); i>=0; i = other.genotype.nextSetBit(i+1)) {
+            newGenotype.set(i);
+        }
+        return new Chromosome(length, newGenotype, random);
     }
 }

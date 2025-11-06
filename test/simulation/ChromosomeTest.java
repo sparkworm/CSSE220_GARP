@@ -70,4 +70,21 @@ public class ChromosomeTest extends TestCase {
         newChrom.mutate(1.0);
         assertEquals(chrom1.getLength(), newChrom.hammingDistance(chrom1));
     }
+
+    public void testSpliceChromosomeWithOther() {
+        Chromosome chromA = new Chromosome("11111111");
+        Chromosome chromB = new Chromosome("00000000");
+        Chromosome chromC = new Chromosome("10101010");
+
+        assertEquals("11110000", chromA.spliceChromosomeWithOther(chromB, 4).genotypeString(-1));
+        assertEquals("00000000", chromA.spliceChromosomeWithOther(chromB, 0).genotypeString(-1));
+        assertEquals("11111111", chromA.spliceChromosomeWithOther(chromB, 8).genotypeString(-1));
+
+        assertEquals("00001111", chromB.spliceChromosomeWithOther(chromA, 4).genotypeString(-1));
+        assertEquals("00001010", chromB.spliceChromosomeWithOther(chromC, 4).genotypeString(-1));
+
+        assertEquals("11111111", chromA.spliceChromosomeWithOther(chromA, 4).genotypeString(-1));
+
+        assertEquals("11111010", chromA.spliceChromosomeWithOther(chromC, 4).genotypeString(-1));
+    }
 }
