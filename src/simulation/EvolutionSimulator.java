@@ -32,7 +32,7 @@ public class EvolutionSimulator {
         this.population = new Population(populationSize, genotypeSize, seed); // create random population of specified size
         this.fitness = new FitnessMaxOnes();  // TODO: replace with real fitness function
         this.selection = new Selection(fitness);
-        this.crossover = new Crossover();  // TODO: implement real crossover for when crossoverActive==true
+        this.crossover = new CrossoverDuplicate();  // TODO: implement real crossover for when crossoverActive==true
         this.mutation = new Mutation(mutationRate);
     }
 
@@ -44,7 +44,7 @@ public class EvolutionSimulator {
         this.population = new Population(populationSize, genotypeSize); // create random population of specified size
         this.fitness = new FitnessMaxOnes();  // TODO: replace with real fitness function
         this.selection = new Selection(fitness);
-        this.crossover = new Crossover();  // TODO: implement real crossover for when crossoverActive==true
+        this.crossover = new CrossoverDuplicate();  // TODO: implement real crossover for when crossoverActive==true
         this.mutation = new Mutation(mutationRate);
     }
 
@@ -52,7 +52,7 @@ public class EvolutionSimulator {
      * Runs the simulation for the provided number of generations.  <br>
      * May break out if the end condition is reached sooner
      *
-     * @param numGenerations the number of generations that this simulatio will be run for.  Should be at least 0.
+     * @param numGenerations the number of generations that this simulation will be run for.  Should be at least 0.
      */
     public void runSimulation(int numGenerations) {
         if (plot != null) plot.clear();

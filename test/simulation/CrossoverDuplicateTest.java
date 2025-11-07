@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-public class CrossoverTest extends TestCase {
+public class CrossoverDuplicateTest extends TestCase {
 
     public void testCrossover() {
         Selection selection = new Selection(new FitnessMaxOnes());
-        Crossover crossover = new Crossover();
+        Crossover crossover = new CrossoverDuplicate();
 
         ArrayList<Chromosome> chromArray = new ArrayList<>();
         chromArray.add(new Chromosome("00101011"));
