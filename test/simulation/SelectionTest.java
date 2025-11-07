@@ -8,7 +8,7 @@ public class SelectionTest extends TestCase {
 
     // NOTE: only uses visual verification because assertion would be a pain here.  TODO?
     public void testSelection() {
-        Selection selection = new Selection(new FitnessMaxOnes());
+        Selection selection = new SelectionTruncation(new FitnessMaxOnes());
 
         ArrayList<Chromosome> chromArray = new ArrayList<>();
         chromArray.add(new Chromosome("00101011"));
@@ -18,7 +18,7 @@ public class SelectionTest extends TestCase {
 
         System.out.println("Population:\n" + pop);
 
-        ArrayList<Chromosome> selected = selection.trunctationSelection(chromArray, 0.9);
+        ArrayList<Chromosome> selected = selection.makeSelection(chromArray, 0.9);
 
         Population selectedPop = new Population(selected);
 
@@ -31,7 +31,7 @@ public class SelectionTest extends TestCase {
 
 
         System.out.println("Population:\n" + pop);
-        selected = selection.trunctationSelection(chromArray, 0.9);
+        selected = selection.makeSelection(chromArray, 0.9);
         selectedPop = new Population(selected);
 
         System.out.println("Selected Pop:\n" + selectedPop);

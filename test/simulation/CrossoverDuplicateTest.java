@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 public class CrossoverDuplicateTest extends TestCase {
 
     public void testCrossover() {
-        Selection selection = new Selection(new FitnessMaxOnes());
+        Selection selection = new SelectionTruncation(new FitnessMaxOnes());
         Crossover crossover = new CrossoverDuplicate();
 
         ArrayList<Chromosome> chromArray = new ArrayList<>();
@@ -18,7 +18,7 @@ public class CrossoverDuplicateTest extends TestCase {
 
         System.out.println("Population:\n" + pop);
 
-        ArrayList<Chromosome> selected = selection.trunctationSelection(chromArray, 0.9);
+        ArrayList<Chromosome> selected = selection.makeSelection(chromArray, 0.9);
 
         Population selectedPop = new Population(selected);
 
@@ -34,7 +34,7 @@ public class CrossoverDuplicateTest extends TestCase {
 
 
         System.out.println("Population:\n" + pop);
-        selected = selection.trunctationSelection(chromArray, 0.2);
+        selected = selection.makeSelection(chromArray, 0.2);
         selectedPop = new Population(selected);
 
         System.out.println("Selected Pop:\n" + selectedPop);

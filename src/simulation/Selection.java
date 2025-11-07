@@ -1,57 +1,14 @@
 package simulation;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
 
-public class Selection {
+public abstract class Selection {
     Fitness fitness;
 
     public Selection (Fitness fitness) {
         this.fitness = fitness;
     }
 
-    /**
-     * Returns the x fittest survivors, where x is the surviveRation times the population size, rounded up.  These are
-     * in descending fitness order.
-     * @param population the array of all the Chromosomes in the population
-     * @param surviveRatio the ratio of survivors to non-suvivors. 0.5 will purge half and keep the other half.
-     *                     MUST NOT BE 0
-     * @return the surviving or "fittest" chromosomes in order of fittest to least fit
-     */
-    public ArrayList<Chromosome> trunctationSelection(ArrayList<Chromosome> population, double surviveRatio) {
-        ArrayList<Chromosome> popCopy = new ArrayList<>(population);
-
-        int numSurvivors = (int)(population.size() * surviveRatio);
-        numSurvivors += (numSurvivors / surviveRatio < population.size()) ? 1 : 0;
-        ArrayList<Chromosome> survivors = new ArrayList<>(numSurvivors);
-        ArrayList<Double> fitnesses = new ArrayList<>(popCopy.size());
-        ArrayList<Double> sortedFitness = new ArrayList<>(popCopy.size());
-        for (Chromosome chrom : population) {
-            Double fit = fitness.calculateFitness(chrom);
-            fitnesses.add(fit);
-            sortedFitness.add(fit); // Double is immutable, so this shouldn't create problems
-        }
-        Collections.sort(sortedFitness);
-
-        for (int i=sortedFitness.size()-1; i>=sortedFitness.size()-numSurvivors; i--) {
-            for (int j=0; j<popCopy.size();j++) { // terrible efficiency btw
-                if (fitnesses.get(j).equals(sortedFitness.get(i))) {
-                    survivors.add(popCopy.get(j));
-                    popCopy.remove(j);
-                    fitnesses.remove(j);
-                    break;
-                }
-            }
-        }
-
-        Population tempPop = new Population(survivors);
-//        System.out.println(String.format("Surviving pop of fitness %.2f: %s",
-//                tempPop.calculateAverageFitness(fitness),
-//                tempPop.toString()));
-
-        return survivors;
-    }
+    public abstract ArrayList<Chromosome> makeSelection(ArrayList<Chromosome> population, double surviveRatio);
 }

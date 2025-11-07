@@ -31,7 +31,7 @@ public class EvolutionSimulator {
         this.eliteSurvivors = eliteSurvivors;
         this.population = new Population(populationSize, genotypeSize, seed); // create random population of specified size
         this.fitness = new FitnessMaxOnes();  // TODO: replace with real fitness function
-        this.selection = new Selection(fitness);
+        this.selection = new SelectionTruncation(fitness);
         this.crossover = new CrossoverDuplicate();  // TODO: implement real crossover for when crossoverActive==true
         this.mutation = new Mutation(mutationRate);
     }
@@ -43,7 +43,7 @@ public class EvolutionSimulator {
         this.eliteSurvivors = eliteSurvivors;
         this.population = new Population(populationSize, genotypeSize); // create random population of specified size
         this.fitness = new FitnessMaxOnes();  // TODO: replace with real fitness function
-        this.selection = new Selection(fitness);
+        this.selection = new SelectionTruncation(fitness);
         this.crossover = new CrossoverDuplicate();  // TODO: implement real crossover for when crossoverActive==true
         this.mutation = new Mutation(mutationRate);
     }
@@ -74,7 +74,7 @@ public class EvolutionSimulator {
                 "");
         generation++;
         // Create new population from the fittest
-        ArrayList<Chromosome> survivors = selection.trunctationSelection(population.getChromosomes(), surviveRatio);
+        ArrayList<Chromosome> survivors = selection.makeSelection(population.getChromosomes(), surviveRatio);
         ArrayList<Chromosome> elites = new ArrayList<>(eliteSurvivors);
         for (int i = 0; i < eliteSurvivors; i++) { // works because survivors is in descending order
             elites.add(new Chromosome(survivors.getFirst()));
