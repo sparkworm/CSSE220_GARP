@@ -19,8 +19,7 @@ public class SelectionTruncation extends Selection {
     public ArrayList<Chromosome> makeSelection(ArrayList<Chromosome> population, double surviveRatio) {
         ArrayList<Chromosome> popCopy = new ArrayList<>(population);
 
-        int numSurvivors = (int)(population.size() * surviveRatio);
-        numSurvivors += (numSurvivors / surviveRatio < population.size()) ? 1 : 0;
+        int numSurvivors = calculateNumSurvivors(population.size(), surviveRatio);
         ArrayList<Chromosome> survivors = new ArrayList<>(numSurvivors);
         ArrayList<Double> fitnesses = new ArrayList<>(popCopy.size());
         ArrayList<Double> sortedFitness = new ArrayList<>(popCopy.size());
