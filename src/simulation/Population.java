@@ -38,13 +38,22 @@ public class Population {
     }
 
     /**
-     * TODO: IMPLEMENT
+     * NOTE: can be done in a more efficient manner.
      * Finds average hamming distance between every Chromosome in the Population
      * @return average hamming distance
      */
     public double calculateDiversity() {
-        System.err.println("calculateDiversity not yet implemented");
-        return Double.NaN;
+        if (chromosomes.isEmpty()) {
+            System.err.println("NO CHROMOSOMES");
+            return Double.NaN;
+        }
+        double sum = 0.0;
+        for (int i=0; i<chromosomes.size(); i++) {
+            for (int j=i+1; j<chromosomes.size(); j++) {
+                sum += chromosomes.get(i).hammingDistance(chromosomes.get(j));
+            }
+        }
+        return (sum / chromosomes.size()) / chromosomes.getFirst().getLength();
     }
 
     /**
