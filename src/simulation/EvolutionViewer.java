@@ -24,6 +24,14 @@ public class EvolutionViewer extends JFrame {
     private FitnessPlotComponent fitnessPlot = new FitnessPlotComponent();
     private JButton startStopButton = new JButton("Start Evolution");
 
+    private JTextField mutationField;
+    private JComboBox<String> selectionCombo;
+    private JCheckBox crossoverCheck;
+    private JTextField popSizeField;
+    private JTextField genField;
+    private JTextField genomeLengthField;
+    private JTextField elitismField;
+
     public EvolutionViewer() {
         setTitle("Evolution Viewer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,24 +39,67 @@ public class EvolutionViewer extends JFrame {
 
         // Control panel
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        controlPanel.add(new JLabel("Mutation Rate:"));
-        controlPanel.add(new JTextField("1.0", 5));
+
+//        controlPanel.add(new JLabel("Mutation Rate:"));
+//        controlPanel.add(new JTextField("1.0", 5));
+//        controlPanel.add(new JLabel("Selection:"));
+//        controlPanel.add(new JComboBox<>(new String[]{"Truncation"}));
+//        controlPanel.add(new JCheckBox("Crossover?"));
+//        controlPanel.add(new JLabel("Population Size:"));
+//        controlPanel.add(new JTextField("100", 5));
+//        controlPanel.add(new JLabel("Generations:"));
+//        controlPanel.add(new JTextField("101", 5));
+//        controlPanel.add(new JLabel("Genome Length:"));
+//        controlPanel.add(new JTextField("100", 5));
+//        controlPanel.add(new JLabel("Elitism %:"));
+//        controlPanel.add(new JTextField("0", 3));
+//        controlPanel.add(startStopButton);
+//
+//        add(fitnessPlot, BorderLayout.CENTER);
+//        add(controlPanel, BorderLayout.SOUTH);
+//
+//        startStopButton.addActionListener(e -> toggleSimulation());
+//
+//        // Timer to run the simulation
+//        timer = new Timer(50, e -> runOneGeneration());
+//
+//        pack();
+//        setLocationRelativeTo(null);
+//        setVisible(true);
+        controlPanel.add(new JLabel("Mutation Rate (N/pop):"));
+        mutationField = new JTextField("1.0", 5);
+        controlPanel.add(mutationField);
+
         controlPanel.add(new JLabel("Selection:"));
-        controlPanel.add(new JComboBox<>(new String[]{"Truncation"}));
-        controlPanel.add(new JCheckBox("Crossover?"));
+        selectionCombo = new JComboBox<>(new String[]{"Truncation", "Roulette", "Ranked"});
+        controlPanel.add(selectionCombo);
+
+        crossoverCheck = new JCheckBox("Crossover?", true);
+        controlPanel.add(crossoverCheck);
+
         controlPanel.add(new JLabel("Population Size:"));
-        controlPanel.add(new JTextField("100", 5));
+        popSizeField = new JTextField("100", 5);
+        controlPanel.add(popSizeField);
+
         controlPanel.add(new JLabel("Generations:"));
-        controlPanel.add(new JTextField("101", 5));
+        genField = new JTextField("101", 5);
+        controlPanel.add(genField);
+
         controlPanel.add(new JLabel("Genome Length:"));
-        controlPanel.add(new JTextField("100", 5));
+        genomeLengthField = new JTextField("100", 5);
+        controlPanel.add(genomeLengthField);
+
         controlPanel.add(new JLabel("Elitism %:"));
-        controlPanel.add(new JTextField("0", 3));
+        elitismField = new JTextField("0", 3);
+        controlPanel.add(elitismField);
+
         controlPanel.add(startStopButton);
 
+        // Add components to the frame
         add(fitnessPlot, BorderLayout.CENTER);
         add(controlPanel, BorderLayout.SOUTH);
 
+        // Button action
         startStopButton.addActionListener(e -> toggleSimulation());
 
         // Timer to run the simulation
@@ -63,10 +114,16 @@ public class EvolutionViewer extends JFrame {
         if (timer.isRunning()) {
             timer.stop();
             startStopButton.setText("Resume Evolution");
-        } else {
-            if (bestHistory.isEmpty()) {
-                initializeSimulation();
-            }
+        }
+//        else {
+//            if (bestHistory.isEmpty()) {
+//                initializeSimulation();
+//            }
+            else {
+                // Check if we need to start fresh
+                if (bestHistory.isEmpty() || startStopButton.getText().equals("Start Over")) {
+                    initializeSimulation();  // ← Start fresh!
+                }
             timer.start();
             startStopButton.setText("Pause Evolution");
         }
@@ -79,19 +136,54 @@ public class EvolutionViewer extends JFrame {
         lowHistory.clear();
         fitnessPlot.clear();
 
-        // Create initial population
-        population = new Population(100, 100);
+        int popSize = Integer.parseInt(popSizeField.getText());
+        int genomeLength = Integer.parseInt(genomeLengthField.getText());
+        double mutRate = Double.parseDouble(mutationField.getText()) / popSize;
+        mutation.setMutationRate(mutRate);
 
-        // Analyze and display generation 0
+        // Update selection method based on combo box
+        String selectionType = (String) selectionCombo.getSelectedItem();
+        switch (selectionType) {
+            case "Truncation":
+                selection = new SelectionTruncation(fitnessFunction);
+                break;
+            case "Roulette":
+                selection = new SelectionRoulette(fitnessFunction, random);
+                break;
+            case "Ranked":
+                selection = new SelectionRanked(fitnessFunction, random);
+                break;
+        }
+
+        population = new Population(popSize, genomeLength);
         analyzeAndPlot();
+
+//        // Create initial population
+//        population = new Population(100, 100);
+//
+//        // Analyze and display generation 0
+//        analyzeAndPlot();
     }
 
     private void runOneGeneration() {
+
+        int maxGen = Integer.parseInt(genField.getText());
+
+
         // 1. SELECTION
         ArrayList<Chromosome> parents = selection.makeSelection(population.getChromosomes(), 0.5); // Keep top 50%
+
         // 2. CROSSOVER
-        ArrayList<Chromosome> offspring = crossover.repopulate(parents, population.getSize());
-        // 3. MUTATION
+        ArrayList<Chromosome> offspring;
+        if (crossoverCheck.isSelected()) {
+            // Use CrossoverSinglePoint
+            offspring = crossover.repopulate(parents, population.getSize());
+        } else {
+            // Use CrossoverDuplicate (no crossover, just cloning)
+            Crossover duplicator = new CrossoverDuplicate();
+            offspring = duplicator.repopulate(parents, population.getSize());
+        }
+
         mutation.mutateChromosomes(offspring);
 
         population.setChromosomes(offspring);

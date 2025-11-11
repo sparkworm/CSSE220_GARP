@@ -55,19 +55,19 @@ public class FitnessPlotComponent extends JComponent {
     }
 
 
-    public void saveDataToFile() {
-        try (FileWriter writer = new FileWriter("fitness_data.csv")) {
-            writer.write("Generation,Best,Average,Low\n");
-            for (int i = 0; i < generations.size(); i++) {
-                writer.write(generations.get(i) + "," + bestFitness.get(i) + "," +
-                        avgFitness.get(i) + "," +
-                        worstFitness.get(i) + "\n");
-            }
-            System.out.println("Fitness data saved!");
-        } catch (Exception e) {
-            System.err.println("Error saving: " + e.getMessage());
-        }
-    }
+//    public void saveDataToFile() {
+//        try (FileWriter writer = new FileWriter("fitness_data.csv")) {
+//            writer.write("Generation,Best,Average,Low\n");
+//            for (int i = 0; i < generations.size(); i++) {
+//                writer.write(generations.get(i) + "," + bestFitness.get(i) + "," +
+//                        avgFitness.get(i) + "," +
+//                        worstFitness.get(i) + "\n");
+//            }
+//            System.out.println("Fitness data saved!");
+//        } catch (Exception e) {
+//            System.err.println("Error saving: " + e.getMessage());
+//        }
+//    }
 
 
     @Override
@@ -98,47 +98,6 @@ public class FitnessPlotComponent extends JComponent {
 
         drawLegend(g2);
 
-
-//        g2.setColor(new Color(230, 230, 230));
-//        g2.fillRect(MARGIN_LEFT, MARGIN_TOP, width_plot, height_plot);
-//        g2.setColor(Color.LIGHT_GRAY);
-//        g2.fillRect(MARGIN_LEFT, MARGIN_TOP, width_plot, height_plot);
-//
-//        if (generations.isEmpty()) {
-//            drawAxes(g2, width_plot, height_plot, 0, 1, 0, 1);
-//            return;
-//        }
-//
-//        int min_genr = generations.get(0);
-//        int max_genr = generations.get(generations.size() - 1);
-//
-//        double maximum_Y = 0.0;
-//
-//
-//        double minVal = Double.POSITIVE_INFINITY;
-//        double maxVal = Double.NEGATIVE_INFINITY;
-//        for (int i = 0; i < generations.size(); i++) {
-//            double b = bestFitness.get(i), a = avgFitness.get(i), wv = worstFitness.get(i);
-//            if (b < minVal) minVal = b;
-//            if (a < minVal) minVal = a;
-//            if (wv < minVal) minVal = wv;
-//            if (b > maxVal) maxVal = b;
-//            if (a > maxVal) maxVal = a;
-//            if (wv > maxVal) maxVal = wv;
-//        }
-//        drawAxes(g2, width_plot, height_plot, min_genr, max_genr, minVal, maxVal);
-//
-//        double xSpan = max_genr - min_genr;
-//        double ySpan = maxVal - minVal;
-//
-//        drawSeries(g2, bestFitness, Best_color, min_genr, minVal, xSpan, ySpan, width_plot, height_plot);
-//        drawSeries(g2, avgFitness, Average_color, min_genr, minVal, xSpan, ySpan, width_plot, height_plot);
-//        drawSeries(g2, worstFitness, low_color, min_genr, minVal, xSpan, ySpan, width_plot, height_plot);
-//
-//        int lx = left + 10, ly = top + 16;
-//        legendLine(g2, Best_color, lx, ly, "Best");
-//        legendLine(g2, Average_color, lx, ly + 18, "Average");
-//        legendLine(g2, low_color, lx, ly + 36, "Worst");
     }
 
     private void drawLegend(Graphics2D g2) {
@@ -257,13 +216,12 @@ public class FitnessPlotComponent extends JComponent {
     }
 
     private double findMaxFitness() {
-        double max = 1.0; // minimum value to avoid division by zero
+        double max = 1.0;
 
         for (double val : bestFitness) {
             if (val > max) max = val;
         }
 
-        // Add 10% padding at top
         return max * 1.1;
     }
 
@@ -296,29 +254,29 @@ public class FitnessPlotComponent extends JComponent {
 
 
 
-    private void drawSeries(Graphics2D g2, ArrayList<Double> series, Color color,
-                            double minGen, double minVal, double xSpan, double ySpan,
-                            int PW, int PH) {
-        g2.setColor(color);
-        g2.setStroke(new BasicStroke(2f));
-        int px = -1, py = -1;
-
-        for (int i = 0; i < generations.size(); i++) {
-            double xn = (generations.get(i) - minGen) / xSpan;        // 0..1
-            double yn = (series.get(i) - minVal) / ySpan;      // 0..1
-            int x = 50 + (int) Math.round(xn * PW);
-            int y = 24 + PH - (int) Math.round(yn * PH);
-            if (i > 0) g2.drawLine(px, py, x, y);
-            px = x; py = y;
-        }
-    }
-    private void legendLine(Graphics2D g2, Color c, int x, int y, String label) {
-        g2.setColor(c);
-        g2.setStroke(new BasicStroke(3f));
-        g2.drawLine(x, y, x + 22, y);
-        g2.setColor(Color.DARK_GRAY);
-        g2.drawString(label, x + 30, y + 4);
-    }
+//    private void drawSeries(Graphics2D g2, ArrayList<Double> series, Color color,
+//                            double minGen, double minVal, double xSpan, double ySpan,
+//                            int PW, int PH) {
+//        g2.setColor(color);
+//        g2.setStroke(new BasicStroke(2f));
+//        int px = -1, py = -1;
+//
+//        for (int i = 0; i < generations.size(); i++) {
+//            double xn = (generations.get(i) - minGen) / xSpan;        // 0..1
+//            double yn = (series.get(i) - minVal) / ySpan;      // 0..1
+//            int x = 50 + (int) Math.round(xn * PW);
+//            int y = 24 + PH - (int) Math.round(yn * PH);
+//            if (i > 0) g2.drawLine(px, py, x, y);
+//            px = x; py = y;
+//        }
+//    }
+//    private void legendLine(Graphics2D g2, Color c, int x, int y, String label) {
+//        g2.setColor(c);
+//        g2.setStroke(new BasicStroke(3f));
+//        g2.drawLine(x, y, x + 22, y);
+//        g2.setColor(Color.DARK_GRAY);
+//        g2.drawString(label, x + 30, y + 4);
+//    }
 
 
 }
