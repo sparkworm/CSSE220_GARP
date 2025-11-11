@@ -8,6 +8,8 @@ import java.util.ArrayList;
  * Class responsible for simulating the steps of evolution of a population.
  */
 public class EvolutionSimulator {
+    public static final double CROSSOVER_DEFAULT_MARGIN = 0.1;
+
     private int generation;
     private boolean crossoverActive;
     private double surviveRatio;
@@ -24,7 +26,7 @@ public class EvolutionSimulator {
     private Crossover crossover;
     private Mutation mutation;
 
-    EvolutionSimulator(int genotypeSize, int populationSize, int eliteSurvivors, double mutationRate, double surviveRatio, long seed) {
+    public EvolutionSimulator(int genotypeSize, int populationSize, int eliteSurvivors, double mutationRate, double surviveRatio, long seed) {
         this.generation = 0;
         this.crossoverActive = false; // change when crossover is more stable
         this.surviveRatio = surviveRatio;
@@ -32,7 +34,7 @@ public class EvolutionSimulator {
         this.population = new Population(populationSize, genotypeSize, seed); // create random population of specified size
         this.fitness = new FitnessMaxOnes();  // TODO: replace with real fitness function
         this.selection = new SelectionTruncation(fitness);
-        this.crossover = new CrossoverDuplicate();  // TODO: implement real crossover for when crossoverActive==true
+        this.crossover = new CrossoverDuplicate();
         this.mutation = new Mutation(mutationRate);
     }
 
@@ -44,7 +46,7 @@ public class EvolutionSimulator {
         this.population = new Population(populationSize, genotypeSize); // create random population of specified size
         this.fitness = new FitnessMaxOnes();  // TODO: replace with real fitness function
         this.selection = new SelectionTruncation(fitness);
-        this.crossover = new CrossoverDuplicate();  // TODO: implement real crossover for when crossoverActive==true
+        this.crossover = new CrossoverDuplicate();
         this.mutation = new Mutation(mutationRate);
     }
 
@@ -123,5 +125,31 @@ public class EvolutionSimulator {
 
     public void setMutationRate(double mutationRate) {
         mutation.setMutationRate(mutationRate);
+    }
+
+    /**
+     * Changes crossover between single-point and duplicate (which is not deemed to truly be crossover, although it
+     * interfaces the same.)
+     * @param is_crossover
+     */
+    public void changeCrossover(boolean is_crossover) {
+        if (is_crossover) this.crossover = new CrossoverSinglePoint(population.random, CROSSOVER_DEFAULT_MARGIN);
+        else this.crossover = new CrossoverDuplicate();
+    }
+
+    /**
+     * Sets the margin of the Crossover.  This doesn't do anything with CrossoverDuplicate.
+     * @param margin
+     */
+    public void setCrossoverMargin(double margin) {
+        this.crossover.setMargin(margin);
+    }
+
+    public void setSelectionType(SelectionType type) {
+        switch (type) {
+            case SelectionType.TRUNCATION -> this.selection = new SelectionTruncation(this.fitness);
+            case SelectionType.ROULETTE -> this.selection = new SelectionRoulette(this.fitness, this.population.getRandom());
+            case SelectionType.RANKED -> this.selection = new SelectionRanked(this.fitness, this.population.getRandom());
+        }
     }
 }

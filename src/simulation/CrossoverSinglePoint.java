@@ -10,13 +10,13 @@ public class CrossoverSinglePoint extends Crossover {
      * harder to test/debug.
      */
     private Random random;
+
+
     /**
-     * When picking a point to perform crossover, this forms the min distance in from either end that the point must be.
+     * When picking a point to perform crossover, margin forms the min distance in from either end that the point must be.
      * <br>
      * MUST NOT EXCEED 0.5
      */
-    private double margin;
-
     public CrossoverSinglePoint(Random random, double margin) {
         this.random = random;
         this.margin = margin;
