@@ -43,4 +43,5 @@ public class SelectionTruncation extends Selection {
 
         return survivors;
     }
+
 }
