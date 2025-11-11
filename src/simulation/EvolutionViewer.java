@@ -2,136 +2,218 @@
 package simulation;
 
 import GUI.FitnessPlotComponent;
-
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.*;
-        import java.awt.*;
 
-public class EvolutionViewer {
+public class EvolutionViewer extends JFrame {
+
+    private Population population;
+    private Random random = new Random();
+    private Fitness fitnessFunction = new FitnessMaxOnes();
+    private Selection selection = new SelectionTruncation(fitnessFunction);
+    private Crossover crossover = new CrossoverSinglePoint(random);
+    private Mutation mutation = new Mutation(0.01); // Default 1% mutation
+    private Timer timer;
+
+    private ArrayList<Double> bestHistory = new ArrayList<>();
+    private ArrayList<Double> avgHistory = new ArrayList<>();
+    private ArrayList<Double> lowHistory = new ArrayList<>();
+
+    private FitnessPlotComponent fitnessPlot = new FitnessPlotComponent();
+    private JButton startStopButton = new JButton("Start Evolution");
+
+    private JTextField mutationField;
+    private JComboBox<String> selectionCombo;
+    private JCheckBox crossoverCheck;
+    private JTextField popSizeField;
+    private JTextField genField;
+    private JTextField genomeLengthField;
+    private JTextField elitismField;
+
+    public EvolutionViewer() {
+        setTitle("Evolution Viewer");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        // Control panel
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+//        controlPanel.add(new JLabel("Mutation Rate:"));
+//        controlPanel.add(new JTextField("1.0", 5));
+//        controlPanel.add(new JLabel("Selection:"));
+//        controlPanel.add(new JComboBox<>(new String[]{"Truncation"}));
+//        controlPanel.add(new JCheckBox("Crossover?"));
+//        controlPanel.add(new JLabel("Population Size:"));
+//        controlPanel.add(new JTextField("100", 5));
+//        controlPanel.add(new JLabel("Generations:"));
+//        controlPanel.add(new JTextField("101", 5));
+//        controlPanel.add(new JLabel("Genome Length:"));
+//        controlPanel.add(new JTextField("100", 5));
+//        controlPanel.add(new JLabel("Elitism %:"));
+//        controlPanel.add(new JTextField("0", 3));
+//        controlPanel.add(startStopButton);
 //
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(EvolutionViewer::launch);
-//    }
+//        add(fitnessPlot, BorderLayout.CENTER);
+//        add(controlPanel, BorderLayout.SOUTH);
+//
+//        startStopButton.addActionListener(e -> toggleSimulation());
+//
+//        // Timer to run the simulation
+//        timer = new Timer(50, e -> runOneGeneration());
+//
+//        pack();
+//        setLocationRelativeTo(null);
+//        setVisible(true);
+        controlPanel.add(new JLabel("Mutation Rate (N/pop):"));
+        mutationField = new JTextField("1.0", 5);
+        controlPanel.add(mutationField);
 
-    private static void launch() {
-        // --- Frame ---
-        JFrame frame = new JFrame("GA Runner (Task 5)");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+        controlPanel.add(new JLabel("Selection:"));
+        selectionCombo = new JComboBox<>(new String[]{"Truncation", "Roulette", "Ranked"});
+        controlPanel.add(selectionCombo);
 
-        // --- Controls (simple) ---
-        JPanel controls = new JPanel(new GridLayout(0, 2, 6, 6));
+        crossoverCheck = new JCheckBox("Crossover?", true);
+        controlPanel.add(crossoverCheck);
 
-        JTextField popSize    = new JTextField("50");
-        JTextField chromLen   = new JTextField("100");
-        JTextField elites     = new JTextField("2");
-        JTextField survive    = new JTextField("0.5");
-        JTextField mutRate    = new JTextField("0.01");
-        JTextField maxGens    = new JTextField("200");
-        JButton     startBtn  = new JButton("Start");
-        JButton     stopBtn   = new JButton("Stop");
-        JButton     saveBtn   = new JButton("Save CSV");
+        controlPanel.add(new JLabel("Population Size:"));
+        popSizeField = new JTextField("100", 5);
+        controlPanel.add(popSizeField);
 
-        controls.add(new JLabel("Population Size:")); controls.add(popSize);
-        controls.add(new JLabel("Chromosome Length:")); controls.add(chromLen);
-        controls.add(new JLabel("Elite Survivors:")); controls.add(elites);
-        controls.add(new JLabel("Survive Ratio:")); controls.add(survive);
-        controls.add(new JLabel("Mutation Rate:")); controls.add(mutRate);
-        controls.add(new JLabel("Generations:")); controls.add(maxGens);
-        controls.add(startBtn); controls.add(stopBtn);
-        controls.add(saveBtn);  controls.add(new JLabel());
+        controlPanel.add(new JLabel("Generations:"));
+        genField = new JTextField("101", 5);
+        controlPanel.add(genField);
 
-        frame.add(controls, BorderLayout.SOUTH);
+        controlPanel.add(new JLabel("Genome Length:"));
+        genomeLengthField = new JTextField("100", 5);
+        controlPanel.add(genomeLengthField);
 
-        // --- Plot panel (your component) ---
-        FitnessPlotComponent plot = new FitnessPlotComponent();
-        frame.add(plot, BorderLayout.EAST);
+        controlPanel.add(new JLabel("Elitism %:"));
+        elitismField = new JTextField("0", 3);
+        controlPanel.add(elitismField);
 
-        // --- Center info (optional) ---
-        JTextArea info = new JTextArea(8, 40);
-        info.setEditable(false);
-        frame.add(new JScrollPane(info), BorderLayout.CENTER);
+        controlPanel.add(startStopButton);
 
-        frame.pack();
-        frame.setLocationByPlatform(true);
-        frame.setVisible(true);
+        // Add components to the frame
+        add(fitnessPlot, BorderLayout.CENTER);
+        add(controlPanel, BorderLayout.SOUTH);
 
-        // --- Create simulator (stays null until Start is pressed) ---
-        final Timer[] timerBox = new Timer[1];
-        final EvolutionSimulator[] simBox = new EvolutionSimulator[1];
-        final int[] currentGen = new int[1];
-        final int[] maxGenTarget = new int[1];
+        // Button action
+        startStopButton.addActionListener(e -> toggleSimulation());
 
-        // Start
-        startBtn.addActionListener(e -> {
-            // parse inputs
-            try {
-                int ps   = Integer.parseInt(popSize.getText().trim());
-                int cl   = Integer.parseInt(chromLen.getText().trim());
-                int el   = Integer.parseInt(elites.getText().trim());
-                double sr= Double.parseDouble(survive.getText().trim());
-                double mr= Double.parseDouble(mutRate.getText().trim());
-                int maxG = Integer.parseInt(maxGens.getText().trim());
+        // Timer to run the simulation
+        timer = new Timer(50, e -> runOneGeneration());
 
-                // create simulator (uses your package-private ctor, OK here in simulation/)
-                EvolutionSimulator sim = new EvolutionSimulator(cl, ps, el, mr, sr);
-                simBox[0] = sim;
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
 
-                // attach plot & reset counters
-                plot.clear();
-                currentGen[0]   = 0;
-                maxGenTarget[0] = maxG;
-
-                // timer tick: one generation per tick
-                if (timerBox[0] != null && timerBox[0].isRunning()) {
-                    timerBox[0].stop();
+    private void toggleSimulation() {
+        if (timer.isRunning()) {
+            timer.stop();
+            startStopButton.setText("Resume Evolution");
+        }
+//        else {
+//            if (bestHistory.isEmpty()) {
+//                initializeSimulation();
+//            }
+            else {
+                // Check if we need to start fresh
+                if (bestHistory.isEmpty() || startStopButton.getText().equals("Start Over")) {
+                    initializeSimulation();  // ← Start fresh!
                 }
-                timerBox[0] = new Timer(40, ae -> {
-                    if (currentGen[0] >= maxGenTarget[0]) {
-                        ((Timer) ae.getSource()).stop();
-                        info.append("Done.\n");
-                        return;
-                    }
+            timer.start();
+            startStopButton.setText("Pause Evolution");
+        }
+    }
 
-                    sim.simulateGeneration(); // advances sim + generation
+    private void initializeSimulation() {
+        // Clear old data
+        bestHistory.clear();
+        avgHistory.clear();
+        lowHistory.clear();
+        fitnessPlot.clear();
 
-                    // compute best/avg/worst using sim’s fitness & population
-                    double best  = Double.NEGATIVE_INFINITY;
-                    double worst = Double.POSITIVE_INFINITY;
-                    double sum   = 0.0;
+        int popSize = Integer.parseInt(popSizeField.getText());
+        int genomeLength = Integer.parseInt(genomeLengthField.getText());
+        double mutRate = Double.parseDouble(mutationField.getText()) / popSize;
+        mutation.setMutationRate(mutRate);
 
-                    for (Chromosome c : sim.getPopulation().getChromosomes()) {
-                        double f = sim.getFitness().calculateFitness(c);
-                        if (f > best)  best = f;
-                        if (f < worst) worst = f;
-                        sum += f;
-                    }
-                    double avg = sum / sim.getPopulation().getSize();
+        // Update selection method based on combo box
+        String selectionType = (String) selectionCombo.getSelectedItem();
+        switch (selectionType) {
+            case "Truncation":
+                selection = new SelectionTruncation(fitnessFunction);
+                break;
+            case "Roulette":
+                selection = new SelectionRoulette(fitnessFunction, random);
+                break;
+            case "Ranked":
+                selection = new SelectionRanked(fitnessFunction, random);
+                break;
+        }
 
-                    // push to plot
-                    plot.addData(sim.getGeneration(), best, avg, worst);
+        population = new Population(popSize, genomeLength);
+        analyzeAndPlot();
 
-                    // small log
-                    info.append(String.format("Gen %d  best=%.2f avg=%.2f worst=%.2f%n",
-                            sim.getGeneration(), best, avg, worst));
-                    currentGen[0]++;
-                });
-                timerBox[0].start();
+//        // Create initial population
+//        population = new Population(100, 100);
+//
+//        // Analyze and display generation 0
+//        analyzeAndPlot();
+    }
 
-                info.append("Started.\n");
+    private void runOneGeneration() {
 
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(frame, "Please enter valid numbers.",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        int maxGen = Integer.parseInt(genField.getText());
 
-        // Stop
-        stopBtn.addActionListener(e -> {
-            if (timerBox[0] != null) timerBox[0].stop();
-            info.append("Stopped.\n");
-        });
 
-        // Save CSV
-        saveBtn.addActionListener(e -> plot.saveDataToFile());
+        // 1. SELECTION
+        ArrayList<Chromosome> parents = selection.makeSelection(population.getChromosomes(), 0.5); // Keep top 50%
+
+        // 2. CROSSOVER
+        ArrayList<Chromosome> offspring;
+        if (crossoverCheck.isSelected()) {
+            // Use CrossoverSinglePoint
+            offspring = crossover.repopulate(parents, population.getSize());
+        } else {
+            // Use CrossoverDuplicate (no crossover, just cloning)
+            Crossover duplicator = new CrossoverDuplicate();
+            offspring = duplicator.repopulate(parents, population.getSize());
+        }
+
+        mutation.mutateChromosomes(offspring);
+
+        population.setChromosomes(offspring);
+
+        analyzeAndPlot();
+
+        if (bestHistory.size() >= 101) { // Stop after 101 generations
+            timer.stop();
+            startStopButton.setText("Start Over");
+        }
+    }
+
+    private void analyzeAndPlot() {
+        double best = 0, low = 100, sum = 0;
+        for (Chromosome c : population.getChromosomes()) {
+            double fitness = fitnessFunction.calculateFitness(c);
+            if (fitness > best) best = fitness;
+            if (fitness < low) low = fitness;
+            sum += fitness;
+        }
+        double avg = sum / population.getSize();
+
+        bestHistory.add(best);
+        avgHistory.add(avg);
+        lowHistory.add(low);
+
+        fitnessPlot.updateData(bestHistory, avgHistory, lowHistory);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(EvolutionViewer::new);
     }
 }
