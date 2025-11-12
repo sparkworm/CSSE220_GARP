@@ -55,19 +55,19 @@ public class FitnessPlotComponent extends JComponent {
     }
 
 
-//    public void saveDataToFile() {
-//        try (FileWriter writer = new FileWriter("fitness_data.csv")) {
-//            writer.write("Generation,Best,Average,Low\n");
-//            for (int i = 0; i < generations.size(); i++) {
-//                writer.write(generations.get(i) + "," + bestFitness.get(i) + "," +
-//                        avgFitness.get(i) + "," +
-//                        worstFitness.get(i) + "\n");
-//            }
-//            System.out.println("Fitness data saved!");
-//        } catch (Exception e) {
-//            System.err.println("Error saving: " + e.getMessage());
-//        }
-//    }
+    public void saveDataToFile() {
+        try (FileWriter writer = new FileWriter("fitness_data.csv")) {
+            writer.write("Generation,Best,Average,Low\n");
+            for (int i = 0; i < generations.size(); i++) {
+                writer.write(generations.get(i) + "," + bestFitness.get(i) + "," +
+                        avgFitness.get(i) + "," +
+                        worstFitness.get(i) + "\n");
+            }
+            System.out.println("Fitness data saved!");
+        } catch (Exception e) {
+            System.err.println("Error saving: " + e.getMessage());
+        }
+    }
 
 
     @Override
