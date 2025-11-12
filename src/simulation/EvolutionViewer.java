@@ -2,6 +2,8 @@
 package simulation;
 
 import GUI.FitnessPlotComponent;
+import GUI.PopulationViewerComponent;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,7 +24,12 @@ public class EvolutionViewer extends JFrame {
     private ArrayList<Double> lowHistory = new ArrayList<>();
 
     private FitnessPlotComponent fitnessPlot = new FitnessPlotComponent();
+    private PopulationViewerComponent populationViewer = new PopulationViewerComponent(); // ← ADD THIS
+
     private JButton startStopButton = new JButton("Start Evolution");
+    private JButton startButton = new JButton("Start Evolution");
+    private JButton pauseButton = new JButton("Pause");
+    private JButton stopButton = new JButton("Stop");
     private JButton saveButton;
 
 
@@ -97,16 +104,29 @@ public class EvolutionViewer extends JFrame {
 
         saveButton = new JButton("Save Data");
         saveButton.addActionListener(e -> fitnessPlot.saveDataToFile());
+
+        controlPanel.add(startButton);
+        controlPanel.add(pauseButton);
+        controlPanel.add(stopButton);
         controlPanel.add(saveButton);
 
-        controlPanel.add(startStopButton);
+        startButton.setEnabled(true);
+        pauseButton.setEnabled(false);
+        stopButton.setEnabled(false);
+        JScrollPane scrollPane = new JScrollPane(populationViewer);
+        scrollPane.setPreferredSize(new Dimension(420, 600));
+
 
         // Add components to the frame
         add(fitnessPlot, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.EAST);
         add(controlPanel, BorderLayout.SOUTH);
 
         // Button action
-        startStopButton.addActionListener(e -> toggleSimulation());
+        startButton.addActionListener(e -> startEvolution());
+        pauseButton.addActionListener(e -> pauseEvolution());
+        stopButton.addActionListener(e -> stopEvolution());
+        saveButton.addActionListener(e -> saveData());
 
         // Timer to run the simulation
         timer = new Timer(50, e -> runOneGeneration());
@@ -116,24 +136,85 @@ public class EvolutionViewer extends JFrame {
         setVisible(true);
     }
 
-    private void toggleSimulation() {
-        if (timer.isRunning()) {
-            timer.stop();
-            startStopButton.setText("Resume Evolution");
-        }
-//        else {
-//            if (bestHistory.isEmpty()) {
-//                initializeSimulation();
-//            }
-            else {
-                // Check if we need to start fresh
-                if (bestHistory.isEmpty() || startStopButton.getText().equals("Start Over")) {
-                    initializeSimulation();  // ← Start fresh!
-                }
+    private void startEvolution() {
+        if (!timer.isRunning()) {
+            // If no history, initialize fresh simulation
+            if (bestHistory.isEmpty()) {
+                initializeSimulation();
+            }
+
+            // Start the timer
             timer.start();
-            startStopButton.setText("Pause Evolution");
+
+            // Update button states
+            startButton.setEnabled(false);
+            pauseButton.setEnabled(true);
+            stopButton.setEnabled(true);
         }
     }
+
+        private void pauseEvolution() {
+            if (timer.isRunning()) {
+                timer.stop();
+
+                // Update button states
+                startButton.setEnabled(true);  // Can resume
+                pauseButton.setEnabled(false);
+                stopButton.setEnabled(true);
+            }
+        }
+
+        private void saveData() {
+            if (bestHistory.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No data to save! Run evolution first.",
+                        "No Data",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            fitnessPlot.saveDataToFile();
+
+            JOptionPane.showMessageDialog(this,
+                    "Data saved to fitness_data.csv",
+                    "Save Successful",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        private void stopEvolution() {
+            // Stop timer
+            timer.stop();
+
+            // Clear all data
+            bestHistory.clear();
+            avgHistory.clear();
+            lowHistory.clear();
+            fitnessPlot.clear();
+            populationViewer.clear();
+
+            // Update button states
+            startButton.setEnabled(true);
+            pauseButton.setEnabled(false);
+            stopButton.setEnabled(false);
+        }
+//    private void toggleSimulation() {
+//        if (timer.isRunning()) {
+//            timer.stop();
+//            startStopButton.setText("Resume Evolution");
+//        }
+////        else {
+////            if (bestHistory.isEmpty()) {
+////                initializeSimulation();
+////            }
+//            else {
+//                // Check if we need to start fresh
+//                if (bestHistory.isEmpty() || startStopButton.getText().equals("Start Over")) {
+//                    initializeSimulation();  // ← Start fresh!
+//                }
+//            timer.start();
+//            startStopButton.setText("Pause Evolution");
+//        }
+//    }
 
 
     private void initializeSimulation() {
@@ -142,6 +223,7 @@ public class EvolutionViewer extends JFrame {
         avgHistory.clear();
         lowHistory.clear();
         fitnessPlot.clear();
+        populationViewer.clear();
 
         int popSize = Integer.parseInt(popSizeField.getText());
         int genomeLength = Integer.parseInt(genomeLengthField.getText());
@@ -217,6 +299,7 @@ public class EvolutionViewer extends JFrame {
         lowHistory.add(low);
 
         fitnessPlot.updateData(bestHistory, avgHistory, lowHistory);
+        populationViewer.updatePopulation(population.getChromosomes(), bestHistory.size() - 1);
     }
 
     public static void main(String[] args) {
