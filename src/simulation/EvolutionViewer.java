@@ -23,6 +23,8 @@ public class EvolutionViewer extends JFrame {
 
     private FitnessPlotComponent fitnessPlot = new FitnessPlotComponent();
     private JButton startStopButton = new JButton("Start Evolution");
+    private JButton saveButton;
+
 
     private JTextField mutationField;
     private JComboBox<String> selectionCombo;
@@ -93,6 +95,10 @@ public class EvolutionViewer extends JFrame {
         elitismField = new JTextField("0", 3);
         controlPanel.add(elitismField);
 
+        saveButton = new JButton("Save Data");
+        saveButton.addActionListener(e -> fitnessPlot.saveDataToFile());
+        controlPanel.add(saveButton);
+
         controlPanel.add(startStopButton);
 
         // Add components to the frame
@@ -128,6 +134,7 @@ public class EvolutionViewer extends JFrame {
             startStopButton.setText("Pause Evolution");
         }
     }
+
 
     private void initializeSimulation() {
         // Clear old data
@@ -169,7 +176,6 @@ public class EvolutionViewer extends JFrame {
 
         int maxGen = Integer.parseInt(genField.getText());
 
-
         // 1. SELECTION
         ArrayList<Chromosome> parents = selection.makeSelection(population.getChromosomes(), 0.5); // Keep top 50%
 
@@ -190,7 +196,7 @@ public class EvolutionViewer extends JFrame {
 
         analyzeAndPlot();
 
-        if (bestHistory.size() >= 101) { // Stop after 101 generations
+        if (bestHistory.size() >= maxGen) {
             timer.stop();
             startStopButton.setText("Start Over");
         }
