@@ -114,13 +114,13 @@ public class EvolutionViewer extends JFrame {
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(populationViewer);
-        scrollPane.setPreferredSize(new Dimension(420, 600));
+        scrollPane.setPreferredSize(new Dimension(420,600));
 
 
         // Add components to the frame
-        add(fitnessPlot, BorderLayout.CENTER);
-        add(scrollPane, BorderLayout.EAST);
-        add(controlPanel, BorderLayout.SOUTH);
+        add(fitnessPlot,BorderLayout.CENTER);
+        add(scrollPane,BorderLayout.EAST);
+        add(controlPanel,BorderLayout.SOUTH);
 
         // Button action
         startButton.addActionListener(e -> startEvolution());
@@ -137,9 +137,9 @@ public class EvolutionViewer extends JFrame {
     }
 
     private void startEvolution() {
-        if (!timer.isRunning()) {
+        if(!timer.isRunning()) {
             // If no history, initialize fresh simulation
-            if (bestHistory.isEmpty()) {
+            if(bestHistory.isEmpty()) {
                 initializeSimulation();
             }
 
@@ -153,59 +153,60 @@ public class EvolutionViewer extends JFrame {
         }
     }
 
-        private void pauseEvolution() {
-            if (timer.isRunning()) {
-                timer.stop();
-
-                // Update button states
-                startButton.setEnabled(true);  // Can resume
-                pauseButton.setEnabled(false);
-                stopButton.setEnabled(true);
-            }
-        }
-
-        private void saveData() {
-            if (bestHistory.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "No data to save! Run evolution first.",
-                        "No Data",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            fitnessPlot.saveDataToFile();
-
-            JOptionPane.showMessageDialog(this,
-                    "Data saved to fitness_data.csv",
-                    "Save Successful",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
-
-        private void stopEvolution() {
-            // Stop timer
+    private void pauseEvolution() {
+        if(timer.isRunning()) {
             timer.stop();
 
-            // Clear all data
-            bestHistory.clear();
-            avgHistory.clear();
-            lowHistory.clear();
-            fitnessPlot.clear();
-            populationViewer.clear();
-
             // Update button states
-            startButton.setEnabled(true);
+            startButton.setEnabled(true);  // Can resume
             pauseButton.setEnabled(false);
-            stopButton.setEnabled(false);
+            stopButton.setEnabled(true);
         }
+    }
+
+    private void saveData() {
+        if(bestHistory.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "No data to save! Run evolution first.",
+                    "No Data",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        fitnessPlot.saveDataToFile();
+
+        JOptionPane.showMessageDialog(this,
+                "Data saved to fitness_data.csv",
+                "Save Successful",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void stopEvolution() {
+        // Stop timer
+        timer.stop();
+
+        // Clear all data
+        bestHistory.clear();
+        avgHistory.clear();
+        lowHistory.clear();
+        fitnessPlot.clear();
+        populationViewer.clear();
+
+        // Update button states
+        startButton.setEnabled(true);
+        pauseButton.setEnabled(false);
+        stopButton.setEnabled(false);
+    }
 //    private void toggleSimulation() {
 //        if (timer.isRunning()) {
 //            timer.stop();
 //            startStopButton.setText("Resume Evolution");
 //        }
-////        else {
-////            if (bestHistory.isEmpty()) {
-////                initializeSimulation();
-////            }
+
+    /// /        else {
+    /// /            if (bestHistory.isEmpty()) {
+    /// /                initializeSimulation();
+    /// /            }
 //            else {
 //                // Check if we need to start fresh
 //                if (bestHistory.isEmpty() || startStopButton.getText().equals("Start Over")) {
@@ -215,8 +216,6 @@ public class EvolutionViewer extends JFrame {
 //            startStopButton.setText("Pause Evolution");
 //        }
 //    }
-
-
     private void initializeSimulation() {
         // Clear old data
         bestHistory.clear();
@@ -230,7 +229,6 @@ public class EvolutionViewer extends JFrame {
         double mutRate = Double.parseDouble(mutationField.getText()) / popSize;
         mutation.setMutationRate(mutRate);
 
-        // Update selection method based on combo box
         String selectionType = (String) selectionCombo.getSelectedItem();
         switch (selectionType) {
             case "Truncation":
