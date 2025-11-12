@@ -114,13 +114,13 @@ public class EvolutionViewer extends JFrame {
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(populationViewer);
-        scrollPane.setPreferredSize(new Dimension(420,600));
+        scrollPane.setPreferredSize(new Dimension(420, 600));
 
 
         // Add components to the frame
-        add(fitnessPlot,BorderLayout.CENTER);
-        add(scrollPane,BorderLayout.EAST);
-        add(controlPanel,BorderLayout.SOUTH);
+        add(fitnessPlot, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.EAST);
+        add(controlPanel, BorderLayout.SOUTH);
 
         // Button action
         startButton.addActionListener(e -> startEvolution());
@@ -137,9 +137,9 @@ public class EvolutionViewer extends JFrame {
     }
 
     private void startEvolution() {
-        if(!timer.isRunning()) {
+        if (!timer.isRunning()) {
             // If no history, initialize fresh simulation
-            if(bestHistory.isEmpty()) {
+            if (bestHistory.isEmpty()) {
                 initializeSimulation();
             }
 
@@ -154,7 +154,7 @@ public class EvolutionViewer extends JFrame {
     }
 
     private void pauseEvolution() {
-        if(timer.isRunning()) {
+        if (timer.isRunning()) {
             timer.stop();
 
             // Update button states
@@ -165,7 +165,7 @@ public class EvolutionViewer extends JFrame {
     }
 
     private void saveData() {
-        if(bestHistory.isEmpty()) {
+        if (bestHistory.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "No data to save! Run evolution first.",
                     "No Data",
@@ -245,42 +245,39 @@ public class EvolutionViewer extends JFrame {
         population = new Population(popSize, genomeLength);
         analyzeAndPlot();
 
-//        // Create initial population
-//        population = new Population(100, 100);
-//
-//        // Analyze and display generation 0
-//        analyzeAndPlot();
     }
 
     private void runOneGeneration() {
 
-        int maxGen = Integer.parseInt(genField.getText());
+        int Maximum_genr = Integer.parseInt(genField.getText());
+        int elite_Count = Integer.parseInt(elitismField.getText());
 
-        // 1. SELECTION
-        ArrayList<Chromosome> parents = selection.makeSelection(population.getChromosomes(), 0.5); // Keep top 50%
+        ArrayList<Chromosome> parents = selection.makeSelection(population.getChromosomes(), 0.5);
 
-        // 2. CROSSOVER
-        ArrayList<Chromosome> offspring;
+        ArrayList<Chromosome> next_Generation;
         if (crossoverCheck.isSelected()) {
-            // Use CrossoverSinglePoint
-            offspring = crossover.repopulate(parents, population.getSize());
+            next_Generation = crossover.repopulate(parents, population.getSize());
         } else {
-            // Use CrossoverDuplicate (no crossover, just cloning)
             Crossover duplicator = new CrossoverDuplicate();
-            offspring = duplicator.repopulate(parents, population.getSize());
+            next_Generation = duplicator.repopulate(parents, population.getSize());
         }
 
-        mutation.mutateChromosomes(offspring);
+        mutation.mutateChromosomes(next_Generation);
 
-        population.setChromosomes(offspring);
+        double elitismPercent = Double.parseDouble(elitismField.getText());
+        applyElitism(next_Generation, elitismPercent);
 
-        analyzeAndPlot();
+        population.setChromosomes(next_Generation);
+         analyzeAndPlot();
 
-        if (bestHistory.size() >= maxGen) {
+        if (bestHistory.size() >= Maximum_genr) {
             timer.stop();
-            startStopButton.setText("Start Over");
+            startButton.setEnabled(true);
+            pauseButton.setEnabled(false);
+            stopButton.setEnabled(true);
         }
     }
+
 
     private void analyzeAndPlot() {
         double best = 0, low = 100, sum = 0;
