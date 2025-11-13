@@ -151,6 +151,8 @@ public class FitnessPlotComponent extends JComponent {
 
             // BEST FITNESS LINE (Green)
             g2.setColor(new Color(0, 200, 0));
+//            int y1_best = MARGIN_TOP + heightPlot -
+//                    (int)(bestFitness.get(i) / maxFitness) ;
             int y1_best = MARGIN_TOP + heightPlot -
                     (int)((bestFitness.get(i) / maxFitness) * heightPlot);
             int y2_best = MARGIN_TOP + heightPlot -
