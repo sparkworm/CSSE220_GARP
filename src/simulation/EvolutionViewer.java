@@ -27,6 +27,7 @@ public class EvolutionViewer extends JFrame {
     private ArrayList<Double> bestHistory = new ArrayList<>();
     private ArrayList<Double> avgHistory = new ArrayList<>();
     private ArrayList<Double> lowHistory = new ArrayList<>();
+    private ArrayList<Double> diversityHistory = new ArrayList<>();
 
     private FitnessPlotComponent fitnessPlot = new FitnessPlotComponent();
     private PopulationViewerComponent populationViewer = new PopulationViewerComponent(); // ← ADD THIS
@@ -201,6 +202,7 @@ public class EvolutionViewer extends JFrame {
         bestHistory.clear();
         avgHistory.clear();
         lowHistory.clear();
+        diversityHistory.clear();
         fitnessPlot.clear();
         populationViewer.clear();
 
@@ -233,6 +235,7 @@ public class EvolutionViewer extends JFrame {
         bestHistory.clear();
         avgHistory.clear();
         lowHistory.clear();
+        diversityHistory.clear();
         fitnessPlot.clear();
         populationViewer.clear();
 
@@ -318,8 +321,10 @@ public class EvolutionViewer extends JFrame {
         bestHistory.add(best);
         avgHistory.add(avg);
         lowHistory.add(low);
+        diversityHistory.add(population.calculateDiversity());
 
-        fitnessPlot.updateData(bestHistory, avgHistory, lowHistory);
+
+        fitnessPlot.updateData(bestHistory, avgHistory, lowHistory, diversityHistory);
         populationViewer.updatePopulation(population.getChromosomes(), bestHistory.size() - 1);
         pathPhenotypePanel.updateWithNewPhenotype(new PathPhenotype(bestChromosome));
         //System.out.println(new PathPhenotype(bestChromosome));

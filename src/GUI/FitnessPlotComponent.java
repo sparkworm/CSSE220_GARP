@@ -12,6 +12,7 @@ public class FitnessPlotComponent extends JComponent {
     private ArrayList<Double> bestFitness;
     private ArrayList<Double> avgFitness;
     private ArrayList<Double> worstFitness;
+    private ArrayList<Double> diversityScores;
 
     private static final int MARGIN_LEFT = 60;
     private static final int MARGIN_RIGHT = 100;
@@ -40,17 +41,19 @@ public class FitnessPlotComponent extends JComponent {
         repaint();
     }
 
-    public void addData(int gen, double best, double avg, double worst) {
+    public void addData(int gen, double best, double avg, double worst, double diversity) {
         generations.add(gen);
         bestFitness.add(best);
         avgFitness.add(avg);
         worstFitness.add(worst);
+        diversityScores.add(diversity);
         repaint();
     }
-    public void updateData(ArrayList<Double> best, ArrayList<Double> avg, ArrayList<Double> worst) {
+    public void updateData(ArrayList<Double> best, ArrayList<Double> avg, ArrayList<Double> worst, ArrayList<Double> diversityHistory) {
         this.bestFitness = new ArrayList<>(best);
         this.avgFitness = new ArrayList<>(avg);
         this.worstFitness = new ArrayList<>(worst);
+        this.diversityScores = new ArrayList<>(diversityHistory);
         repaint();
     }
 
@@ -125,6 +128,13 @@ public class FitnessPlotComponent extends JComponent {
         g2.fillRect(legendX, legendY, 15, 15);
         g2.setColor(Color.BLACK);
         g2.drawString("Worst", legendX + 20, legendY + 12);
+
+        // Diversity
+        legendY += 25;
+        g2.setColor(Color.BLUE);
+        g2.fillRect(legendX, legendY, 15, 15);
+        g2.setColor(Color.BLACK);
+        g2.drawString("Diversity", legendX + 20, legendY + 12);
     }
 
     private void drawFitnessLines(Graphics2D g2, int widthPlot, int heightPlot) {
@@ -162,6 +172,14 @@ public class FitnessPlotComponent extends JComponent {
             int y2_worst = MARGIN_TOP + heightPlot -
                     (int)((worstFitness.get(i+1) / maxFitness) * heightPlot);
             g2.drawLine(x1, y1_worst, x2, y2_worst);
+
+            // DIVERSITY LINE (Blue)
+            g2.setColor(Color.BLUE);
+            int y1_div = MARGIN_TOP + heightPlot -
+                    (int)((diversityScores.get(i) / maxFitness) * heightPlot);
+            int y2_div = MARGIN_TOP + heightPlot -
+                    (int)((diversityScores.get(i+1) / maxFitness) * heightPlot);
+            g2.drawLine(x1, y1_div, x2, y2_div);
         }
       }
 
