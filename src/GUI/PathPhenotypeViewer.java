@@ -1,5 +1,6 @@
 package GUI;
 
+import simulation.Chromosome;
 import simulation.pathfinding.PathFitness;
 import simulation.pathfinding.PathPhenotype;
 import simulation.pathfinding.TerrainGrid;
@@ -14,57 +15,30 @@ import java.awt.*;
  * perhaps in some sort of population viewer, which would display multiple PathPhenotypePanels
  */
 public class PathPhenotypeViewer extends JFrame {
-    public static final int DEFAULT_TILE_SIZE = 100;
-    private PathPhenotype phenotype;
-    private TerrainGrid terrain;
-    private PathPhenotypeComponent pathPhenotypeComponent;
-    private PathFitness fitnessCalculator;
-    private JLabel infoLabel;
-    // The length of one edge of any square tile
-    private int tileSize;
 
-    public PathPhenotypeViewer(PathPhenotype phenotype, TerrainGrid terrain) {
-        this.phenotype = phenotype;
-        this.terrain = terrain;
-        this.fitnessCalculator = new PathFitness(terrain);
-        this.tileSize = DEFAULT_TILE_SIZE;
+    public PathPhenotypeViewer(PathPhenotype pheno) {
+//        PathPhenotypePanel phenoPanel = new PathPhenotypePanel(pheno);
+        PathPhenotypePanel phenoPanel = new PathPhenotypePanel();
 
-        // setup
-        this.pathPhenotypeComponent = new PathPhenotypeComponent(phenotype, terrain, tileSize);
-        this.infoLabel = new JLabel();
-        updateInfoLabelText();
-        displaySetup();
+        add(phenoPanel);
+
+        phenoPanel.updateWithNewPhenotype(pheno);
+
+        setTitle("Phenotype Viewer");
+        setSize(phenoPanel.getPreferredSize());
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+//        pack();
     }
-    public PathPhenotypeViewer(PathPhenotype phenotype) {
-        this(phenotype, new TerrainGrid());
-    }
+
+
 
     /**
-     * Sets title, adds components, and packs.
+     * Purely for testing
      */
-    private void displaySetup() {
-        setTitle("Phenotype Viewer");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Display path cost.
-        add(infoLabel, BorderLayout.NORTH);
-        // Display terrain and path therethrough
-        add(pathPhenotypeComponent, BorderLayout.CENTER);
-
-        pack();
-        setVisible(true);
-    }
-
-    public void setPhenotype(PathPhenotype newPhenotype) {
-        this.phenotype = newPhenotype;
-        this.pathPhenotypeComponent.setPhenotype(phenotype);
-        updateInfoLabelText();
-    }
-
-    public void updateInfoLabelText() {
-        infoLabel.setText(String.format("Cost: %d        Fitness: %.2f",
-                terrain.calculatePathCost(phenotype.getPathArray()),
-                fitnessCalculator.calculateFitness(phenotype)
-        ));
+    public static void main(String[] args) {
+        Chromosome testChromo = new Chromosome(100,true);
+        PathPhenotype testPheno = new PathPhenotype(testChromo);
+        PathPhenotypeViewer pathPhenotypeViewer = new PathPhenotypeViewer(testPheno);
     }
 }

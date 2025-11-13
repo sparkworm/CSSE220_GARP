@@ -40,8 +40,8 @@ public class TerrainGrid {
         this.targetPos = targetPos;
     }
     public TerrainGrid() {
-        //this(new Vector2Int(0,0), new Vector2Int(DEFAULT_COST_GRID.length, DEFAULT_COST_GRID[0].length));
-        this(new Vector2Int(0,0), new Vector2Int(1,1));
+        this(new Vector2Int(0,0), new Vector2Int(DEFAULT_COST_GRID.length-1, DEFAULT_COST_GRID[0].length-1));
+        //this(new Vector2Int(0,0), new Vector2Int(1,1));
     }
 
     /**

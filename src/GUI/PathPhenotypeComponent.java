@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PathPhenotypeComponent extends JComponent {
+    public static final int DEFAULT_FONT_SIZE = 9;
     private PathPhenotype phenotype;
     private TerrainGrid terrain;
     private Font font;
@@ -16,7 +17,7 @@ public class PathPhenotypeComponent extends JComponent {
         this.phenotype = phenotype;
         this.terrain = terrain;
         this.tileSize = tileSize;
-        this.font = new Font("SansSerif", Font.PLAIN, 18);
+        this.font = new Font("SansSerif", Font.PLAIN, DEFAULT_FONT_SIZE);
         this.setPreferredSize(new Dimension(tileSize*terrain.getWidth(),tileSize*terrain.getHeight()));
     }
 

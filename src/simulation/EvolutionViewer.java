@@ -2,7 +2,9 @@
 package simulation;
 
 import GUI.FitnessPlotComponent;
+import GUI.PathPhenotypePanel;
 import GUI.PopulationViewerComponent;
+import simulation.pathfinding.PathPhenotype;
 import utility.Pair;
 
 import java.awt.*;
@@ -28,6 +30,7 @@ public class EvolutionViewer extends JFrame {
 
     private FitnessPlotComponent fitnessPlot = new FitnessPlotComponent();
     private PopulationViewerComponent populationViewer = new PopulationViewerComponent(); // ← ADD THIS
+    private PathPhenotypePanel pathPhenotypePanel = new PathPhenotypePanel();
 
     private JButton startStopButton = new JButton("Start Evolution");
     private JButton startButton = new JButton("Start Evolution");
@@ -116,13 +119,19 @@ public class EvolutionViewer extends JFrame {
         startButton.setEnabled(true);
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
-        JScrollPane scrollPane = new JScrollPane(populationViewer);
-        scrollPane.setPreferredSize(new Dimension(420, 600));
+
+        JPanel populationAndPhenoPanel = new JPanel();
+        populationAndPhenoPanel.add(populationViewer, BorderLayout.NORTH);
+        populationAndPhenoPanel.add(pathPhenotypePanel, BorderLayout.SOUTH);
+
+        JScrollPane scrollPane = new JScrollPane(populationAndPhenoPanel);
+        scrollPane.setPreferredSize(new Dimension(600, 600));
 
 
         // Add components to the frame
         add(fitnessPlot, BorderLayout.CENTER);
         add(scrollPane, BorderLayout.EAST);
+//        add(populationAndPhenoPanel, BorderLayout.EAST);
         add(controlPanel, BorderLayout.SOUTH);
 
         // Button action
@@ -294,9 +303,13 @@ public class EvolutionViewer extends JFrame {
 
     private void analyzeAndPlot() {
         double best = 0, low = 100, sum = 0;
+        Chromosome bestChromosome = population.getChromosomes().getFirst();
         for (Chromosome c : population.getChromosomes()) {
             double fitness = fitnessFunction.calculateFitness(c);
-            if (fitness > best) best = fitness;
+            if (fitness > best) {
+                best = fitness;
+                bestChromosome = c;
+            }
             if (fitness < low) low = fitness;
             sum += fitness;
         }
@@ -308,6 +321,11 @@ public class EvolutionViewer extends JFrame {
 
         fitnessPlot.updateData(bestHistory, avgHistory, lowHistory);
         populationViewer.updatePopulation(population.getChromosomes(), bestHistory.size() - 1);
+        pathPhenotypePanel.updateWithNewPhenotype(new PathPhenotype(bestChromosome));
+        //System.out.println(new PathPhenotype(bestChromosome));
+        pathPhenotypePanel.revalidate();
+        pathPhenotypePanel.repaint();
+
     }
 
     public static void main(String[] args) {
