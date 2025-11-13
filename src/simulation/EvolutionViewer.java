@@ -4,7 +4,9 @@ package simulation;
 import GUI.FitnessPlotComponent;
 import GUI.PathPhenotypePanel;
 import GUI.PopulationViewerComponent;
+import simulation.pathfinding.PathFitness;
 import simulation.pathfinding.PathPhenotype;
+import simulation.pathfinding.TerrainGrid;
 import utility.Pair;
 
 import java.awt.*;
@@ -18,7 +20,8 @@ public class EvolutionViewer extends JFrame {
 
     private Population population;
     private Random random = new Random();
-    private Fitness fitnessFunction = new FitnessMaxOnes();
+//    private Fitness fitnessFunction = new FitnessMaxOnes();
+    private Fitness fitnessFunction = new PathFitness(new TerrainGrid());
     private Selection selection = new SelectionTruncation(fitnessFunction);
     private Crossover crossover = new CrossoverSinglePoint(random);
     private Mutation mutation = new Mutation(0.01); // Default 1% mutation

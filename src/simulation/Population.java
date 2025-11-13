@@ -81,7 +81,8 @@ public class Population {
                 sum += chromosomes.get(i).hammingDistance(chromosomes.get(j));
             }
         }
-        return (sum / chromosomes.size()) / chromosomes.getFirst().getLength();
+        int compareCount = (int)(chromosomes.size() / 2.0 * (chromosomes.size()-1));
+        return (sum / compareCount) / chromosomes.getFirst().getLength();
     }
 
     /**
