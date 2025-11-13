@@ -3,9 +3,12 @@ package simulation;
 
 import GUI.FitnessPlotComponent;
 import GUI.PopulationViewerComponent;
+import utility.Pair;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 import javax.swing.*;
 
@@ -252,9 +255,19 @@ public class EvolutionViewer extends JFrame {
         int Maximum_genr = Integer.parseInt(genField.getText());
         int elite_Count = Integer.parseInt(elitismField.getText());
 
+        int numElites = (int)(population.getSize() * (Double.parseDouble(elitismField.getText()) / 100));
+        population.sortChromosomesByFitness(fitnessFunction);
+
+        ArrayList<Chromosome> elites = new ArrayList<>(numElites);
+        for (int i=0; i<numElites; i++) {
+            elites.add(population.getChromosomes().getFirst());
+            population.getChromosomes().removeFirst(); // possibly bad efficiency
+        }
+
         ArrayList<Chromosome> parents = selection.makeSelection(population.getChromosomes(), 0.5);
 
         ArrayList<Chromosome> next_Generation;
+        // Polymorphism should make this check unnecessary
         if (crossoverCheck.isSelected()) {
             next_Generation = crossover.repopulate(parents, population.getSize());
         } else {
@@ -262,12 +275,13 @@ public class EvolutionViewer extends JFrame {
             next_Generation = duplicator.repopulate(parents, population.getSize());
         }
 
-        mutation.mutateChromosomes(next_Generation);
-
-        double elitismPercent = Double.parseDouble(elitismField.getText());
-        applyElitism(next_Generation, elitismPercent);
-
         population.setChromosomes(next_Generation);
+
+        mutation.mutateChromosomes(population.getChromosomes());
+
+        // Add elites back
+        population.addChromosomes(elites);
+
          analyzeAndPlot();
 
         if (bestHistory.size() >= Maximum_genr) {
@@ -277,7 +291,6 @@ public class EvolutionViewer extends JFrame {
             stopButton.setEnabled(true);
         }
     }
-
 
     private void analyzeAndPlot() {
         double best = 0, low = 100, sum = 0;
