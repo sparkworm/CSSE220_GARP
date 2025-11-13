@@ -1,6 +1,10 @@
 package simulation;
 
+import utility.Pair;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -35,6 +39,30 @@ public class Population {
      */
     public void mutateChromosomes(Mutation mutation) {
         System.err.println("mutateChromosomes not yet implemented");
+    }
+
+    /**
+     * Sorts Chromosomes from greatest to least
+     */
+    public void sortChromosomesByFitness(Fitness fitness) {
+        ArrayList<Pair> indexedFitnessList = new ArrayList<>(getSize());
+        //ArrayList<Chromosome> chromosomes = population.getChromosomes();
+        for (int i=0; i<chromosomes.size(); i++) {
+            indexedFitnessList.add(new Pair(fitness.calculateFitness(chromosomes.get(i)), i));
+        }
+        // Sort indexedFitnessList by fitness
+        Collections.sort(indexedFitnessList, new Comparator<Pair>() {
+            @Override
+            public int compare(Pair p1, Pair p2) {
+                return Double.compare(p2.getFirst(), p1.getFirst()); // Descending order
+            }
+        });
+
+        ArrayList<Chromosome> sortedChromosomes = new ArrayList<>(chromosomes.size());
+        for (int i=0; i<indexedFitnessList.size(); i++) {
+            sortedChromosomes.add(chromosomes.get(indexedFitnessList.get(i).getSecond()));
+        }
+        chromosomes = sortedChromosomes;
     }
 
     /**

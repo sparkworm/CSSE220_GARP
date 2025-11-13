@@ -47,4 +47,25 @@ public class PopulationTest extends TestCase {
 
         assertEquals(expected, pop3.calculateDiversity());
     }
+
+    public void testSortChromosomesByFitness() {
+        Fitness fitness = new FitnessMaxOnes();
+
+        ArrayList<Chromosome> chromArray = new ArrayList<>();
+        chromArray.add(new Chromosome("000001"));
+        chromArray.add(new Chromosome("000011"));
+        chromArray.add(new Chromosome("000111"));
+        chromArray.add(new Chromosome("001111"));
+        chromArray.add(new Chromosome("001111"));
+
+        Population pop = new Population(chromArray);
+
+        System.out.println(pop);
+
+        pop.sortChromosomesByFitness(fitness);
+
+        System.out.println(pop);
+
+        // TODO add assertions
+    }
 }
