@@ -11,10 +11,10 @@ public class PopulationViewerComponent extends JComponent {
         private ArrayList<Chromosome> chromosomes;
         private int generation = 0;
 
-        // Size of each individual chromosome grid
-        private static final int CELL_SIZE = 3;  // Small squares
-        private static final int GRID_COLS = 10; // 10 chromosomes per row
-        private static final int PADDING = 5;    // Space between chromosome grids
+        // Grid Size
+        private static final int CELL_SIZE = 3;  
+        private static final int COLOUMN = 10; 
+        private static final int PADDING = 5;    
 
         public PopulationViewerComponent() {
             chromosomes = new ArrayList<>();
@@ -39,7 +39,6 @@ public class PopulationViewerComponent extends JComponent {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
 
-            // Fill background
             g2.setColor(Color.WHITE);
             g2.fillRect(0, 0, getWidth(), getHeight());
 
@@ -47,36 +46,29 @@ public class PopulationViewerComponent extends JComponent {
                 return;
             }
 
-            // Draw title
             g2.setColor(Color.BLACK);
             g2.setFont(new Font("Arial", Font.BOLD, 14));
             g2.drawString("Generation: " + generation, 10, 20);
 
-            // Calculate chromosome grid dimensions
-            int genomeLength = chromosomes.get(0).getLength();
-            int chromoCols = (int) Math.ceil(Math.sqrt(genomeLength));
-            int chromoRows = (int) Math.ceil((double) genomeLength / chromoCols);
-
-            int chromoWidth = chromoCols * CELL_SIZE;
-            int chromoHeight = chromoRows * CELL_SIZE;
-
-            // Draw each chromosome
+            // Chromosome grid 
+            int genome_length = chromosomes.get(0).getLength();
+            int chromo_cols = (int) Math.ceil(Math.sqrt(genome_length));
+            int chromoRows = (int) Math.ceil((double) genome_length / chromo_cols);
+            int width_chromosome = chromo_cols * CELL_SIZE;
+            int height_chromosome = chromoRows * CELL_SIZE;
+            // Draw  chromosome
             int startY = 30;
             int startX = 10;
-
             for (int i = 0; i < chromosomes.size(); i++) {
-                int row = i / GRID_COLS;
-                int col = i % GRID_COLS;
-
-                int x = startX + col * (chromoWidth + PADDING);
-                int y = startY + row * (chromoHeight + PADDING);
-
-                drawChromosome(g2, chromosomes.get(i), x, y, chromoCols, chromoRows);
+                int row = i / COLOUMN;
+                int col = i % COLOUMN;
+                int x = startX + col * (width_chromosome + PADDING);
+                int y = startY + row * (height_chromosome + PADDING);
+                drawChromosome(g2, chromosomes.get(i), x, y, chromo_cols, chromoRows);
             }
         }
 
-        private void drawChromosome(Graphics2D g2, Chromosome chromosome,
-                                    int x, int y, int cols, int rows) {
+        private void drawChromosome(Graphics2D g2, Chromosome chromosome,int x, int y, int cols, int rows) {
             for (int i = 0; i < chromosome.getLength(); i++) {
                 int row = i / cols;
                 int col = i % cols;

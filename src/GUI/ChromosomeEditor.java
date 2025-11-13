@@ -12,8 +12,8 @@ import java.io.FileNotFoundException;
 public class ChromosomeEditor extends JFrame {
 
     private Chromosome chromosome;
-    private ChromosomeComponent chromosomeComponent;
-    private JTextField mutationField;
+    private ChromosomeComponent chromo_Component;
+    private JTextField mutation_field;
     private JLabel statusLabel;
 
     public ChromosomeEditor() {
@@ -25,7 +25,7 @@ public class ChromosomeEditor extends JFrame {
         this.add(this.statusLabel, BorderLayout.NORTH);
 
         this.chromosome = new Chromosome(100, true);
-        this.chromosomeComponent = new ChromosomeComponent(this.chromosome);
+        this.chromo_Component = new ChromosomeComponent(this.chromosome);
 
         JPanel buttonPanel = new JPanel();
 
@@ -46,8 +46,8 @@ public class ChromosomeEditor extends JFrame {
         buttonPanel.add(saveButton);
 
         buttonPanel.add(new JLabel("Mutation Rate:"));
-        this.mutationField = new JTextField("0.01", 5);
-        buttonPanel.add(this.mutationField);
+        this.mutation_field = new JTextField("0.01", 5);
+        buttonPanel.add(this.mutation_field);
 
 
         JButton mutateButton = new JButton("Mutate");
@@ -58,21 +58,21 @@ public class ChromosomeEditor extends JFrame {
         });
         buttonPanel.add(mutateButton);
 
-        this.add(this.chromosomeComponent, BorderLayout.CENTER);
+        this.add(this.chromo_Component, BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.SOUTH);
 
-        this.chromosomeComponent.addMouseListener(new MouseListener() {
+        this.chromo_Component.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int rows_cols = (int) Math.sqrt(chromosome.getLength());
-                int col = e.getX() / chromosomeComponent.getPixelSize();
-                int row = e.getY() / chromosomeComponent.getPixelSize();
+                int col = e.getX() / chromo_Component.getPixelSize();
+                int row = e.getY() / chromo_Component.getPixelSize();
                 int index = row * rows_cols + col;
 
                 if (index < chromosome.getLength()) {
                     boolean old = chromosome.getBit(index);
-                    chromosomeComponent.getChromosome().setBit(index, !old);
-                    chromosomeComponent.repaint();
+                    chromo_Component.getChromosome().setBit(index, !old);
+                    chromo_Component.repaint();
                 }
             }
 
@@ -104,8 +104,8 @@ public class ChromosomeEditor extends JFrame {
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             if (FileIO.readChromosomeFromFile(chooser.getSelectedFile()) != null) {
                 this.chromosome = FileIO.readChromosomeFromFile(chooser.getSelectedFile());
-                this.chromosomeComponent.setChromosome(this.chromosome);
-                System.out.println("Chromosome loaded!");
+                this.chromo_Component.setChromosome(this.chromosome);
+                System.out.println("loaded Chromosome");
                 this.statusLabel.setText("Loaded: " + chooser.getSelectedFile().getName());
                 this.pack();
             } else {
@@ -122,7 +122,7 @@ public class ChromosomeEditor extends JFrame {
         chooser.setCurrentDirectory(new File("."));
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             FileIO.writeChromosomeToFile(this.chromosome, chooser.getSelectedFile());
-            System.out.println("Chromosome saved!");
+            System.out.println("Chromosome saved");
             this.statusLabel.setText("Saved: " + chooser.getSelectedFile().getName());
 
         }
@@ -130,24 +130,21 @@ public class ChromosomeEditor extends JFrame {
 
     private void mutateChromosome() {
         try {
-            double rate = Double.parseDouble(this.mutationField.getText());
+            double rate = Double.parseDouble(this.mutation_field.getText());
 
             chromosome.mutate(rate);
-//            chromosomeComponent.getChromosome().mutate(rate);
-            chromosomeComponent.repaint();
+//            chromo_Component.getChromosome().mutate(rate);
+            chromo_Component.repaint();
             System.out.println("Chromosome mutated with rate: " + rate);
             this.statusLabel.setText("Mutated (not saved)");  // ADD THIS LINE
 
         } catch (NumberFormatException e) {
-            System.err.println("Invalid mutation rate: " + this.mutationField.getText());
-            JOptionPane.showMessageDialog(this,
-                    "Please enter a valid number between 0 and 1",
-                    "Invalid Input",
-                    JOptionPane.ERROR_MESSAGE);
+            System.err.println("Invalid mutation rate: " + this.mutation_field.getText());
+            JOptionPane.showMessageDialog(this,"Please enter a valid number between 0 and 1","Invalid Input", JOptionPane.ERROR_MESSAGE);
         }
-//        chromosomeComponent.getChromosome().randomizeGenotype(0.5);
-        chromosomeComponent.repaint();
-        System.out.println("Chromosome mutated!");
+//        chromo_Component.getChromosome().randomizeGenotype(0.5);
+        chromo_Component.repaint();
+        System.out.println("The chromosom has been mutated");
     }
 
 
@@ -160,6 +157,6 @@ public class ChromosomeEditor extends JFrame {
      * The main method to launch the editor.
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(ChromosomeEditor::new);
+        new ChromosomeEditor();
     }
 }

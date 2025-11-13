@@ -10,13 +10,10 @@ public class ChromosomeComponent extends JComponent {
     private Chromosome chromosome;
     private static final int pixel_size = 30;
 
-
     public ChromosomeComponent(Chromosome chromosome) {
         this.chromosome = chromosome;
         grid();
-
     }
-
     public void grid() {
         int length = chromosome.getLength();
         int rows_cols = (int) Math.sqrt(length);
@@ -30,10 +27,10 @@ public class ChromosomeComponent extends JComponent {
         grid();
         repaint();
     }
-
     /**
-     * Set the chromosome from a String of 1s and 0s
-     * @param strGenotype the String of 1s and 0s representing a genotype
+     * Chromosome from a String of 1s and 0s
+     *
+     * @param strGenotype representing a genotype using string of 1s and 0s
      */
     public void setChromosome(String strGenotype) {
         setChromosome(new Chromosome(strGenotype));
@@ -45,23 +42,18 @@ public class ChromosomeComponent extends JComponent {
         int length = chromosome.getLength();
         int rows_cols = (int) Math.sqrt(length);
 
-
         for (int i = 0; i < length; i++) {
             int row = i / rows_cols;
             int col = i % rows_cols;
-
             int x = col * pixel_size;
             int y = row * pixel_size;
-
             if (chromosome.getBit(i)) {
                 g2.setColor(Color.GREEN);
-            } else {
+            }
+            else {
                 g2.setColor(Color.BLACK);
             }
-
             g.fillRect(x, y, pixel_size, pixel_size);
-
-
         }
     }
 

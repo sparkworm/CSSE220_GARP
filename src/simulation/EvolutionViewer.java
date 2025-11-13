@@ -308,7 +308,9 @@ public class EvolutionViewer extends JFrame {
     }
 
     private void analyzeAndPlot() {
-        double best = 0, low = 100, sum = 0;
+        double best = 0;
+        double low = 100;
+        double sum = 0;
         Chromosome bestChromosome = population.getChromosomes().getFirst();
         for (Chromosome c : population.getChromosomes()) {
             double fitness = fitnessFunction.calculateFitness(c);
@@ -337,6 +339,6 @@ public class EvolutionViewer extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(EvolutionViewer::new);
+        new EvolutionViewer();
     }
 }
