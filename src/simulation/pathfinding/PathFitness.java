@@ -32,9 +32,20 @@ public class PathFitness extends Fitness {
      */
     public double calculateFitness(PathPhenotype phenotype) {
         ArrayList<Vector2Int> posArray = terrain.getPositionArray(phenotype.getPathArray());
+        Vector2Int[] pathArray = phenotype.getPathArray();
+        // The sum of the difficulties of the tiles that have been travelled over
+        int pathCost = terrain.calculatePathCost(pathArray);
+        // The difficulty of traversing a similar distance if all difficulties were average
+        double averagePathCost = terrain.calculateAverageDifficulty() * pathArray.length;
+        // manhattan distance from the endpoint of the path to the target
         int distToTarget = posArray.getLast().manhattanDistance(terrain.getTargetPos());
+        // The distance from the starting point to the target.  When these are in opposite corners, it is the maximum distance
         int maxDistToTarget = terrain.getTargetPos().manhattanDistance(terrain.getStartingPos());
-        return 1.0 - (double)distToTarget / maxDistToTarget;
+        //double fitness = Math.pow((1.0 - (double)distToTarget / maxDistToTarget), (pathCost/averagePathCost));
+        double fitness = Math.pow((averagePathCost/pathCost), (1.0 - (double)distToTarget / maxDistToTarget));
+        //System.out.println("Fitness: " + fitness);
+        return fitness;
+        //return 1.0 - (double)distToTarget / maxDistToTarget;
     }
 
     /**

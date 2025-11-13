@@ -119,6 +119,20 @@ public class TerrainGrid {
     }
 
     /**
+     * Finds the average cell value of costGrid
+     * @return
+     */
+    public double calculateAverageDifficulty() {
+        double sum = 0.0;
+        for (int[] row : costGrid) {
+            for (int difficulty : row) {
+                sum += difficulty;
+            }
+        }
+        return sum / (costGrid.length * costGrid[0].length);
+    }
+
+    /**
      * Get width of terrain grid
      * @return # of tiles accross
      */
