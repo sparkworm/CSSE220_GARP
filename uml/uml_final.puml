@@ -1,0 +1,383 @@
+@startuml
+class simulation.pathfinding.TerrainGrid {
+- {static} int[][] DEFAULT_COST_GRID
+~ int[][] costGrid
+- Vector2Int startingPos
+- Vector2Int targetPos
++ int calculatePathCost(Vector2Int[])
++ ArrayList<Vector2Int> getPositionArray(Vector2Int[])
++ int getDifficultAtCoord(Vector2Int)
++ int getDifficultAtCoord(int,int)
+- void boundPos(Vector2Int)
++ String toString()
++ int getWidth()
++ int getHeight()
++ Vector2Int getTargetPos()
++ Vector2Int getStartingPos()
+}
+
+simulation.pathfinding.TerrainGrid -> utility.Vector2Int
+
+class simulation.Population {
+~ ArrayList<Chromosome> chromosomes
+~ Random random
++ void mutateChromosomes(Mutation)
++ void sortChromosomesByFitness(Fitness)
++ double calculateDiversity()
++ double calculateAverageFitness(Fitness)
++ String toString()
++ int getSize()
++ void addChromosomes(ArrayList<Chromosome>)
++ ArrayList<Chromosome> getChromosomes()
++ void setChromosomes(ArrayList<Chromosome>)
++ Random getRandom()
++ void setRandom(Random)
+}
+simulation.Population ->"*" simulation.Chromosome
+
+abstract class simulation.Selection {
+# Fitness fitness
++ {abstract}ArrayList<Chromosome> makeSelection(ArrayList<Chromosome>,double)
++ int calculateNumSurvivors(int,double)
+}
+simulation.Selection -> simulation.Fitness
+
+
+class simulation.FitnessMaxConsecutiveOnes {
++ double calculateFitness(Chromosome)
+}
+
+class simulation.CrossoverDuplicate {
++ ArrayList<Chromosome> repopulate(ArrayList<Chromosome>,int)
+}
+
+abstract class simulation.Phenotype {
+}
+class javadocExample.BankAccount {
+- String name
+- double balance
++ void deposit(double)
++ double getBalance()
++ void setName(String)
++ String getName()
+}
+
+
+class simulation.FitnessMaxOnes {
++ double calculateFitness(Chromosome)
+}
+
+class GUI.PathPhenotypeComponent {
++ {static} int DEFAULT_FONT_SIZE
+- PathPhenotype phenotype
+- TerrainGrid terrain
+- Font font
+- int tileSize
++ void setPhenotype(PathPhenotype)
+# void paintComponent(Graphics)
+# Color calculateHSBForDifficulty(float,float)
+}
+GUI.PathPhenotypeComponent -> simulation.pathfinding.PathPhenotype
+GUI.PathPhenotypeComponent -> simulation.pathfinding.TerrainGrid
+
+
+
+class simulation.Chromosome {
+~ Random random
+- int length
+- BitSet genotype
++ void setBit(int,boolean)
++ boolean getBit(int)
++ void randomizeGenotype(double)
++ BitSet[] getGenotypeFragments(int)
++ void mutate(double)
++ int hammingDistance(Chromosome)
++ String toString()
++ String genotypeString(int)
++ String genotypeString()
++ int getLength()
++ void setRandom(Random)
++ Random getRandom()
++ Chromosome spliceChromosomeWithOther(Chromosome,int)
+}
+
+class GUI.PathPhenotypePanel {
++ {static} int DEFAULT_TILE_SIZE
+- PathPhenotype phenotype
+- TerrainGrid terrain
+- PathPhenotypeComponent pathPhenotypeComponent
+- PathFitness fitnessCalculator
+- JLabel infoLabel
+- int tileSize
++ void updateWithNewPhenotype(PathPhenotype)
+- void displaySetup()
++ void setPhenotype(PathPhenotype)
++ void updateInfoLabelText()
+}
+
+GUI.PathPhenotypePanel -> simulation.pathfinding.PathPhenotype
+GUI.PathPhenotypePanel -> simulation.pathfinding.TerrainGrid
+GUI.PathPhenotypePanel -> GUI.PathPhenotypeComponent
+GUI.PathPhenotypePanel -> simulation.pathfinding.PathFitness
+
+class simulation.Mutation {
+- double mutationRate
++ void mutateChromosomes(ArrayList<Chromosome>)
++ void setMutationRate(double)
+}
+
+
+class simulation.CrossoverSinglePoint {
+- double DEFAULT_MARGIN
+- Random random
++ ArrayList<Chromosome> repopulate(ArrayList<Chromosome>,int)
++ int generateSplicePoint(int)
++ int findSplicePoint(int,double)
++ void setMargin(double)
+}
+
+abstract class simulation.Crossover {
+# double margin
++ {abstract}ArrayList<Chromosome> repopulate(ArrayList<Chromosome>,int)
++ void setMargin(double)
+}
+
+
+class mainApp.MainApp {
+- void runApp()
++ {static} void main(String[])
+}
+
+enum simulation.SelectionType {
++  TRUNCATION
++  ROULETTE
++  RANKED
+}
+
+class simulation.pathfinding.PathFitness {
+- TerrainGrid terrain
++ double calculateFitness(Chromosome)
++ double calculateFitness(PathPhenotype)
+}
+simulation.pathfinding.PathFitness -> simulation.pathfinding.TerrainGrid
+
+class utility.Vector2Int {
+- int x
+- int y
++ Vector2Int opposite()
++ {static} Vector2Int add(Vector2Int,Vector2Int)
++ void increaseBy(Vector2Int)
++ int manhattanLength()
++ int manhattanDistance(Vector2Int)
++ int getY()
++ void setY(int)
++ int getX()
++ void setX(int)
++ void setXY(int,int)
++ Vector2Int clone()
++ String toString()
++ boolean equals(Vector2Int)
+}
+
+
+class utility.Pair {
+- double first
+- int second
++ double getFirst()
++ int getSecond()
+}
+
+
+class GUI.FitnessPlotComponent {
+- ArrayList<Integer> generations
+- ArrayList<Double> bestFitness
+- ArrayList<Double> avgFitness
+- ArrayList<Double> worstFitness
+- ArrayList<Double> diversityScores
+- {static} int MARGIN_LEFT
+- {static} int MARGIN_RIGHT
+- {static} int MARGIN_TOP
+- {static} int MARGIN_BOTTOM
++ void clear()
++ void addData(int,double,double,double,double)
++ void updateData(ArrayList<Double>,ArrayList<Double>,ArrayList<Double>,ArrayList<Double>)
++ void saveDataToFile()
++ void paintComponent(Graphics)
+- void drawLegend(Graphics2D)
+- void drawFitnessLines(Graphics2D,int,int)
+- void drawAxisLabels(Graphics2D,int,int)
+- double findMaxFitness()
+- void drawAxes(Graphics2D,int,int)
+}
+
+
+class utility.FileIO {
++ {static} Chromosome readChromosomeFromFile(File)
++ {static} void writeChromosomeToFile(Chromosome,File)
+}
+
+class GUI.PathPhenotypeViewer {
++ {static} void main(String[])
+}
+
+class simulation.FitnessMatchTarget {
+- Chromosome baseChromosome
++ double calculateFitness(Chromosome)
+}
+simulation.FitnessMatchTarget -> simulation.Chromosome
+
+
+class simulation.SelectionRanked {
+~ Random random
++ ArrayList<Chromosome> makeSelection(ArrayList<Chromosome>,double)
++ int findIdxFromDepth(double,int)
++ int maxDepth(int)
+}
+
+
+class GUI.ChromosomeViewer {
+}
+class GUI.MultiLine {
++ {static} float DEFAULT_WIDTH
++ {static} Color DEFAULT_COLOR
+- ArrayList<Vector2Int> positionArray
+- int lengthMultplier
+- Stroke stroke
+- Color color
++ void drawOn(Graphics2D)
+}
+GUI.MultiLine -> utility.Vector2Int
+
+
+class simulation.EvolutionViewer {
+- Population population
+- Random random
+- Fitness fitnessFunction
+- Selection selection
+- Crossover crossover
+- Mutation mutation
+- Timer timer
+- ArrayList<Double> bestHistory
+- ArrayList<Double> avgHistory
+- ArrayList<Double> lowHistory
+- ArrayList<Double> diversityHistory
+- FitnessPlotComponent fitnessPlot
+- PopulationViewerComponent populationViewer
+- PathPhenotypePanel pathPhenotypePanel
+- JButton startStopButton
+- JButton startButton
+- JButton pauseButton
+- JButton stopButton
+- JButton saveButton
+- JTextField mutationField
+- JComboBox<String> selectionCombo
+- JCheckBox crossoverCheck
+- JTextField popSizeField
+- JTextField genField
+- JTextField genomeLengthField
+- JTextField elitismField
+- void startEvolution()
+- void pauseEvolution()
+- void saveData()
+- void stopEvolution()
+- void initializeSimulation()
+- void runOneGeneration()
+- void analyzeAndPlot()
++ {static} void main(String[])
+}
+simulation.EvolutionViewer -> simulation.Population
+simulation.EvolutionViewer -> simulation.Fitness
+simulation.EvolutionViewer -> simulation.Selection
+simulation.EvolutionViewer -> simulation.Crossover
+simulation.EvolutionViewer -> simulation.Mutation
+simulation.EvolutionViewer -> GUI.FitnessPlotComponent
+simulation.EvolutionViewer -> GUI.PopulationViewerComponent
+simulation.EvolutionViewer -> GUI.PathPhenotypePanel
+
+
+abstract class simulation.Fitness {
++ {abstract}double calculateFitness(Chromosome)
+}
+
+class GUI.PopulationViewerComponent {
+- ArrayList<Chromosome> chromosomes
+- int generation
+- {static} int CELL_SIZE
+- {static} int GRID_COLS
+- {static} int PADDING
++ void updatePopulation(ArrayList<Chromosome>,int)
++ void clear()
+# void paintComponent(Graphics)
+- void drawChromosome(Graphics2D,Chromosome,int,int,int,int)
+}
+GUI.PopulationViewerComponent ->"*" simulation.Chromosome
+
+
+class simulation.pathfinding.PathPhenotype {
+- Vector2Int[] pathArray
+- void calculatePathArray(Chromosome)
+- Vector2Int directionFromData(boolean,boolean)
++ Vector2Int[] getPathArray()
++ String toString()
+}
+simulation.pathfinding.PathPhenotype ->"*" utility.Vector2Int
+
+class simulation.SelectionTruncation {
++ ArrayList<Chromosome> makeSelection(ArrayList<Chromosome>,double)
+}
+
+class GUI.ChromosomeEditor {
+- Chromosome chromosome
+- ChromosomeComponent chromosomeComponent
+- JTextField mutationField
+- JLabel statusLabel
+- void loadChromosome()
+- void saveChromosome()
+- void mutateChromosome()
++ {static} void main(String[])
+}
+GUI.ChromosomeEditor -> simulation.Chromosome
+GUI.ChromosomeEditor -> GUI.ChromosomeComponent
+
+
+class GUI.ChromosomeComponent {
+- Chromosome chromosome
+- {static} int pixel_size
++ void grid()
++ void setChromosome(Chromosome)
++ void setChromosome(String)
+# void paintComponent(Graphics)
++ int getPixelSize()
++ Chromosome getChromosome()
+}
+GUI.ChromosomeComponent --> simulation.Chromosome
+
+
+class simulation.SelectionRoulette {
+- Random random
++ ArrayList<Chromosome> makeSelection(ArrayList<Chromosome>,double)
+}
+
+
+
+
+simulation.Fitness <|-- simulation.FitnessMaxConsecutiveOnes
+simulation.Crossover <|-- simulation.CrossoverDuplicate
+simulation.Fitness <|-- simulation.FitnessMaxOnes
+GUI.JComponent <|-- GUI.PathPhenotypeComponent
+GUI.JPanel <|-- GUI.PathPhenotypePanel
+simulation.Crossover <|-- simulation.CrossoverSinglePoint
+javax.swing.JComponent <|-- mainApp.DemoImageComponent
+simulation.Fitness <|-- simulation.pathfinding.PathFitness
+GUI.JComponent <|-- GUI.FitnessPlotComponent
+GUI.JFrame <|-- GUI.PathPhenotypeViewer
+simulation.Fitness <|-- simulation.FitnessMatchTarget
+simulation.Selection <|-- simulation.SelectionRanked
+simulation.JFrame <|-- simulation.EvolutionViewer
+GUI.JComponent <|-- GUI.PopulationViewerComponent
+simulation.Phenotype <|-- simulation.pathfinding.PathPhenotype
+simulation.Selection <|-- simulation.SelectionTruncation
+GUI.JFrame <|-- GUI.ChromosomeEditor
+GUI.JComponent <|-- GUI.ChromosomeComponent
+simulation.Selection <|-- simulation.SelectionRoulette
+@enduml
