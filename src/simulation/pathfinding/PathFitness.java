@@ -25,6 +25,19 @@ public class PathFitness extends Fitness {
         return calculateFitness(phenotype);
     }
 
+    /**
+     * Value between 0 and 1 indicating the closeness to target.
+     * @param phenotype
+     * @return
+     */
+    public double calculateFitness(PathPhenotype phenotype) {
+        ArrayList<Vector2Int> posArray = terrain.getPositionArray(phenotype.getPathArray());
+        int distToTarget = posArray.getLast().manhattanDistance(terrain.getTargetPos());
+        int maxDistToTarget = terrain.getTargetPos().manhattanDistance(terrain.getStartingPos());
+        return 1.0 - (double)distToTarget / maxDistToTarget;
+    }
+
+    /**
     public double calculateFitness(PathPhenotype phenotype) {
         ArrayList<Vector2Int> posArray = terrain.getPositionArray(phenotype.getPathArray());
         int pathCost = terrain.calculatePathCost(phenotype.getPathArray());
@@ -36,4 +49,5 @@ public class PathFitness extends Fitness {
         }
         return 100.0 / distToTarget / pathCost;
     }
+     */
 }

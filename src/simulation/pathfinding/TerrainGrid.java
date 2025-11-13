@@ -135,4 +135,6 @@ public class TerrainGrid {
     }
 
     public Vector2Int getTargetPos() {return targetPos;}
+
+    public Vector2Int getStartingPos() {return startingPos;}
 }
