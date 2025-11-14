@@ -20,37 +20,40 @@ public class EvolutionViewer extends JFrame {
 
     private Population population;
     private Random random = new Random();
-//    private Fitness fitnessFunction = new FitnessMaxOnes();
-    private Fitness fitnessFunction = new PathFitness(new TerrainGrid());
-    private Selection selection = new SelectionTruncation(fitnessFunction);
+//    private Fitness fitness_function = new FitnessMaxOnes();
+    private Fitness fitness_function = new PathFitness(new TerrainGrid());
+    private Selection selection = new SelectionTruncation(fitness_function);
     private Crossover crossover = new CrossoverSinglePoint(random);
-    private Mutation mutation = new Mutation(0.01); // Default 1% mutation
+    private Mutation mutation = new Mutation(0.01);
     private Timer timer;
 
-    private ArrayList<Double> bestHistory = new ArrayList<>();
-    private ArrayList<Double> avgHistory = new ArrayList<>();
+    private ArrayList<Double> best_history = new ArrayList<>();
+    private ArrayList<Double> average_history = new ArrayList<>();
     private ArrayList<Double> lowHistory = new ArrayList<>();
     private ArrayList<Double> diversityHistory = new ArrayList<>();
 
     private FitnessPlotComponent fitnessPlot = new FitnessPlotComponent();
-    private PopulationViewerComponent populationViewer = new PopulationViewerComponent(); // ← ADD THIS
+    private PopulationViewerComponent populationViewer = new PopulationViewerComponent();
     private PathPhenotypePanel pathPhenotypePanel = new PathPhenotypePanel();
 
-    private JButton startStopButton = new JButton("Start Evolution");
+//    private JButton startStopButton = new JButton("Start Evolution");
     private JButton startButton = new JButton("Start Evolution");
     private JButton pauseButton = new JButton("Pause");
     private JButton stopButton = new JButton("Stop");
     private JButton saveButton;
 
-
     private JTextField mutationField;
-    private JComboBox<String> selectionCombo;
+    private JComboBox<String> selection_types;
     private JCheckBox crossoverCheck;
     private JTextField popSizeField;
     private JTextField targetFitnessField;
     private JTextField genField;
     private JTextField genomeLengthField;
     private JTextField elitismField;
+    private JTextField population_sizefield;
+    private JTextField generation_field;
+    private JTextField genome_lengthfield;
+    private JTextField elitism_field ;
 
     public EvolutionViewer() {
         setTitle("Evolution Viewer");
@@ -78,44 +81,36 @@ public class EvolutionViewer extends JFrame {
 //        add(fitnessPlot, BorderLayout.CENTER);
 //        add(controlPanel, BorderLayout.SOUTH);
 //
-//        startStopButton.addActionListener(e -> toggleSimulation());
-//
-//        // Timer to run the simulation
-//        timer = new Timer(50, e -> runOneGeneration());
-//
-//        pack();
-//        setLocationRelativeTo(null);
-//        setVisible(true);
-        controlPanel.add(new JLabel("Mutation Rate (N/pop):"));
+        controlPanel.add(new JLabel("Mutation Rate:"));
         mutationField = new JTextField("1.0", 5);
         controlPanel.add(mutationField);
 
         controlPanel.add(new JLabel("Selection:"));
-        selectionCombo = new JComboBox<>(new String[]{"Truncation", "Roulette", "Ranked"});
-        controlPanel.add(selectionCombo);
+        selection_types = new JComboBox<>(new String[]{"Truncation", "Roulette", "Ranked"});
+        controlPanel.add(selection_types);
 
-        crossoverCheck = new JCheckBox("Crossover?", true);
+        crossoverCheck = new JCheckBox("Crossover", true);
         controlPanel.add(crossoverCheck);
 
         controlPanel.add(new JLabel("Population Size:"));
-        popSizeField = new JTextField("100", 5);
-        controlPanel.add(popSizeField);
+        population_sizefield = new JTextField("100", 5);
+        controlPanel.add(population_sizefield);
 
         controlPanel.add(new JLabel("Generations:"));
-        genField = new JTextField("101", 5);
-        controlPanel.add(genField);
+        generation_field = new JTextField("101", 5);
+        controlPanel.add(generation_field);
 
         controlPanel.add(new JLabel("Target Fitness:"));
         targetFitnessField = new JTextField("1000", 5); // WARNING check what happens with parse double if blank
         controlPanel.add(targetFitnessField);
 
         controlPanel.add(new JLabel("Genome Length:"));
-        genomeLengthField = new JTextField("100", 5);
-        controlPanel.add(genomeLengthField);
+        genome_lengthfield = new JTextField("100", 5);
+        controlPanel.add(genome_lengthfield);
 
         controlPanel.add(new JLabel("Elitism %:"));
-        elitismField = new JTextField("0", 3);
-        controlPanel.add(elitismField);
+        elitism_field  = new JTextField("0", 3);
+        controlPanel.add(elitism_field );
 
         saveButton = new JButton("Save Data");
         saveButton.addActionListener(e -> fitnessPlot.saveDataToFile());
@@ -136,20 +131,17 @@ public class EvolutionViewer extends JFrame {
         JScrollPane scrollPane = new JScrollPane(populationAndPhenoPanel);
         scrollPane.setPreferredSize(new Dimension(600, 600));
 
-
-        // Add components to the frame
         add(fitnessPlot, BorderLayout.CENTER);
         add(scrollPane, BorderLayout.EAST);
 //        add(populationAndPhenoPanel, BorderLayout.EAST);
         add(controlPanel, BorderLayout.SOUTH);
 
-        // Button action
         startButton.addActionListener(e -> startEvolution());
         pauseButton.addActionListener(e -> pauseEvolution());
         stopButton.addActionListener(e -> stopEvolution());
         saveButton.addActionListener(e -> saveData());
 
-        // Timer to run the simulation
+        // Timer
         timer = new Timer(50, e -> runOneGeneration());
 
         pack();
@@ -159,15 +151,12 @@ public class EvolutionViewer extends JFrame {
 
     private void startEvolution() {
         if (!timer.isRunning()) {
-            // If no history, initialize fresh simulation
-            if (bestHistory.isEmpty()) {
+            if (best_history.isEmpty()) {
                 initializeSimulation();
             }
-
             // Start the timer
             timer.start();
-
-            // Update button states
+            // Update button
             startButton.setEnabled(false);
             pauseButton.setEnabled(true);
             stopButton.setEnabled(true);
@@ -179,36 +168,29 @@ public class EvolutionViewer extends JFrame {
             timer.stop();
 
             // Update button states
-            startButton.setEnabled(true);  // Can resume
+            startButton.setEnabled(true);
             pauseButton.setEnabled(false);
             stopButton.setEnabled(true);
         }
     }
 
     private void saveData() {
-        if (bestHistory.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "No data to save! Run evolution first.",
-                    "No Data",
-                    JOptionPane.WARNING_MESSAGE);
+        if (best_history.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No data to save! Run evolution first.", "No Data", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         fitnessPlot.saveDataToFile();
-
-        JOptionPane.showMessageDialog(this,
-                "Data saved to fitness_data.csv",
-                "Save Successful",
-                JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Data saved to fitness_data.csv", "Save Successful", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void stopEvolution() {
         // Stop timer
         timer.stop();
 
-        // Clear all data
-        bestHistory.clear();
-        avgHistory.clear();
+        // Clear data
+        best_history.clear();
+        average_history.clear();
         lowHistory.clear();
         diversityHistory.clear();
         fitnessPlot.clear();
@@ -225,14 +207,10 @@ public class EvolutionViewer extends JFrame {
 //            startStopButton.setText("Resume Evolution");
 //        }
 
-    /// /        else {
-    /// /            if (bestHistory.isEmpty()) {
-    /// /                initializeSimulation();
-    /// /            }
 //            else {
 //                // Check if we need to start fresh
-//                if (bestHistory.isEmpty() || startStopButton.getText().equals("Start Over")) {
-//                    initializeSimulation();  // ← Start fresh!
+//                if (best_history.isEmpty() || startStopButton.getText().equals("Start Over")) {
+//                    initializeSimulation();  //
 //                }
 //            timer.start();
 //            startStopButton.setText("Pause Evolution");
@@ -240,28 +218,28 @@ public class EvolutionViewer extends JFrame {
 //    }
     private void initializeSimulation() {
         // Clear old data
-        bestHistory.clear();
-        avgHistory.clear();
+        best_history.clear();
+        average_history.clear();
         lowHistory.clear();
         diversityHistory.clear();
         fitnessPlot.clear();
         populationViewer.clear();
 
-        int popSize = Integer.parseInt(popSizeField.getText());
-        int genomeLength = Integer.parseInt(genomeLengthField.getText());
+        int popSize = Integer.parseInt(population_sizefield.getText());
+        int genomeLength = Integer.parseInt(genome_lengthfield.getText());
         double mutRate = Double.parseDouble(mutationField.getText()) / popSize;
         mutation.setMutationRate(mutRate);
 
-        String selectionType = (String) selectionCombo.getSelectedItem();
+        String selectionType = (String) selection_types.getSelectedItem();
         switch (selectionType) {
             case "Truncation":
-                selection = new SelectionTruncation(fitnessFunction);
+                selection = new SelectionTruncation(fitness_function);
                 break;
             case "Roulette":
-                selection = new SelectionRoulette(fitnessFunction, random);
+                selection = new SelectionRoulette(fitness_function, random);
                 break;
             case "Ranked":
-                selection = new SelectionRanked(fitnessFunction, random);
+                selection = new SelectionRanked(fitness_function, random);
                 break;
         }
 
@@ -272,11 +250,11 @@ public class EvolutionViewer extends JFrame {
 
     private void runOneGeneration() {
 
-        int Maximum_genr = Integer.parseInt(genField.getText());
-        int elite_Count = Integer.parseInt(elitismField.getText());
+        int Maximum_genr = Integer.parseInt(generation_field.getText());
+//        int elite_Count = Integer.parseInt(elitism_field .getText());
 
-        int numElites = (int)(population.getSize() * (Double.parseDouble(elitismField.getText()) / 100));
-        population.sortChromosomesByFitness(fitnessFunction);
+        int numElites = (int)(population.getSize() * (Double.parseDouble(elitism_field .getText()) / 100));
+        population.sortChromosomesByFitness(fitness_function);
 
         ArrayList<Chromosome> elites = new ArrayList<>(numElites);
         for (int i=0; i<numElites; i++) {
@@ -304,7 +282,7 @@ public class EvolutionViewer extends JFrame {
 
          analyzeAndPlot();
 
-        if (bestHistory.size() >= Maximum_genr) {
+        if (best_history.size() >= Maximum_genr) {
             timer.stop();
             startButton.setEnabled(true);
             pauseButton.setEnabled(false);
@@ -316,34 +294,33 @@ public class EvolutionViewer extends JFrame {
         double best = 0;
         double low = 100;
         double sum = 0;
-        Chromosome bestChromosome = population.getChromosomes().getFirst();
+        Chromosome best_chromosome = population.getChromosomes().getFirst();
         for (Chromosome c : population.getChromosomes()) {
-            double fitness = fitnessFunction.calculateFitness(c);
+            double fitness = fitness_function.calculateFitness(c);
             if (fitness > best) {
                 best = fitness;
-                bestChromosome = c;
+                best_chromosome = c;
             }
             if (fitness < low) low = fitness;
             sum += fitness;
         }
-        double avg = sum / population.getSize();
+        double average = sum / population.getSize();
 
-        bestHistory.add(best);
-        avgHistory.add(avg);
+        best_history.add(best);
+        average_history.add(average);
         lowHistory.add(low);
         diversityHistory.add(population.calculateDiversity());
 
-
-        fitnessPlot.updateData(bestHistory, avgHistory, lowHistory, diversityHistory);
-        populationViewer.updatePopulation(population.getChromosomes(), bestHistory.size() - 1);
-        pathPhenotypePanel.updateWithNewPhenotype(new PathPhenotype(bestChromosome));
-        //System.out.println(new PathPhenotype(bestChromosome));
+        fitnessPlot.updateData(best_history, average_history, lowHistory, diversityHistory);
+        populationViewer.updatePopulation(population.getChromosomes(), best_history.size() - 1);
+        pathPhenotypePanel.updateWithNewPhenotype(new PathPhenotype(best_chromosome));
+        //System.out.println(new PathPhenotype(best_chromosome));
         pathPhenotypePanel.revalidate();
         pathPhenotypePanel.repaint();
 
         // Threshold reached
         try {
-            if (Double.parseDouble(targetFitnessField.getText()) < fitnessFunction.calculateFitness(bestChromosome)) {
+            if (Double.parseDouble(targetFitnessField.getText()) < fitness_function.calculateFitness(best_chromosome)) {
                 pauseEvolution();
             }
         } catch (Exception e) {
