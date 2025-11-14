@@ -2,6 +2,10 @@ package simulation;
 
 import java.util.ArrayList;
 
+/**
+ * Technically not a form of crossover, but interfaces with the program in the same way,  This is the "Crossover" that
+ * should be performed if Crossover is disabled.  Works by simply duplicating the parent chromosomes.
+ */
 public class CrossoverDuplicate extends Crossover {
 
     /**

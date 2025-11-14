@@ -84,7 +84,6 @@ public class Chromosome {
     }
 
     /**
-     * TODO: add exception handling for out-of-bounds setting/getting <br>
      * Sets the bit at the specified index to the specified value
      * @param idx index of stored bit
      * @param val value (false==0, true==1)
@@ -94,7 +93,6 @@ public class Chromosome {
     }
 
     /**
-     * TODO: add exception handling for out-of-bounds setting/getting <br>
      * Get the value at a specific index
      * @param idx index of requested bit
      * @return true if the bit at idx is 1, false otherwise

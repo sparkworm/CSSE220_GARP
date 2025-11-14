@@ -2,6 +2,9 @@ package utility;
 
 import java.util.Vector;
 
+/**
+ * Represents a vector of two integers.  Useful for grid coordinates/directions.
+ */
 public class Vector2Int {
     private int x;
 

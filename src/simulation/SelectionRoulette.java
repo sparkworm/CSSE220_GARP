@@ -3,6 +3,9 @@ package simulation;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Makes a selection by using each chromosome's relative fitness as its odds of being selected.
+ */
 public class SelectionRoulette extends Selection {
     private Random random;
 

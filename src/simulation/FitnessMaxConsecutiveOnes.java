@@ -4,7 +4,7 @@ package simulation;
 /**
  * Calculates fitness such that a higher number of consecutive ones is more fit.
  */
-public class FitnessMaxConsecutiveOnes extends Fitness {
+public class FitnessMaxConsecutiveOnes implements Fitness {
     /**
      * @param chromosome
      * @return the number of consecutive ones in the genotype

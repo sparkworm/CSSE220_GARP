@@ -3,6 +3,9 @@ package simulation;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Responsible for performing a genetic 'crossover' where [0,n) of one genotype is combined with [n,end] of the other
+ */
 public class CrossoverSinglePoint extends Crossover {
     private final double DEFAULT_MARGIN = 0.2;
     /**

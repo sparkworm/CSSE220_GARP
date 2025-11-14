@@ -3,7 +3,7 @@ package simulation;
 /**
  * Counts fitness based on how close the Chromosome is to the base Chromosome
  */
-public class FitnessMatchTarget extends Fitness {
+public class FitnessMatchTarget implements Fitness {
     private Chromosome baseChromosome;
 
     public FitnessMatchTarget(Chromosome baseChromosome) {

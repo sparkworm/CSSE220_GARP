@@ -6,7 +6,10 @@ import utility.Vector2Int;
 
 import java.util.ArrayList;
 
-public class PathFitness extends Fitness {
+/**
+ * Finds fitness of a path.  Note: value may exceed 1.
+ */
+public class PathFitness implements Fitness {
     private TerrainGrid terrain;
 
     public PathFitness(TerrainGrid terrain) {

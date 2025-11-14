@@ -3,7 +3,7 @@ package simulation;
 /**
  * Evaluates fitness as the number of 1s in chromosome.  For example '01101011' would have fitness 5.
  */
-public class FitnessMaxOnes extends Fitness {
+public class FitnessMaxOnes implements Fitness {
     @Override
     public double calculateFitness(Chromosome chromosome) {
         int count = 0;

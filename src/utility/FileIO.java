@@ -4,6 +4,9 @@ import simulation.Chromosome;
 
 import java.io.*;
 
+/**
+ * Handles IO activity
+ */
 public class FileIO {
 
     /**

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * Makes Selection by giving each chromosome a rank number which acts as its relative odds of being selected.
+ */
 public class SelectionRanked extends Selection {
     Random random;
 

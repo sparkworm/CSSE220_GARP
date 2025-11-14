@@ -3,6 +3,9 @@ package simulation;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Superclass from which other forms of selection inherit.  Needs a fitness function to perform selection.
+ */
 public abstract class Selection {
     protected Fitness fitness;
 
@@ -20,9 +23,6 @@ public abstract class Selection {
      * @return The number of survivors
      */
     public int calculateNumSurvivors(int size, double surviveRatio) {
-//        int numSurvivors = (int)(size * surviveRatio);
-//        numSurvivors += (numSurvivors / surviveRatio < size) ? 1 : 0;
-//        return numSurvivors;
         return (int) Math.ceil(surviveRatio * size);
     }
 }

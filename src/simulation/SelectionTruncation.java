@@ -3,6 +3,9 @@ package simulation;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Makes a selection by simply picking the fittest individuals and discarding all others.
+ */
 public class SelectionTruncation extends Selection {
     public SelectionTruncation (Fitness fitness) {
         super(fitness);
