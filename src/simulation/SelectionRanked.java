@@ -55,14 +55,12 @@ public class SelectionRanked extends Selection {
             // make it before stopping, determining the chosen Chromosome
             double depth = random.nextDouble() * totalFitness;
 
-            //int idx = findIdxFromDepth(depth, rankedFitnesses.size());
-
             int idx = 0;
-            depth -= fitnesses.get(idx);
+            depth -= rankedFitnesses.get(idx);
             // Second condition ensures that the loop won't go too far even with floating point error
             while(depth > 0 && idx < numSurvivors) {
                 idx++;
-                depth -= fitnesses.get(idx);
+                depth -= rankedFitnesses.get(idx);
             }
             // idx is now the index of the chosen Chromosome
             totalFitness -= rankedFitnesses.get(idx);
