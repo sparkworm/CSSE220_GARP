@@ -47,6 +47,7 @@ public class EvolutionViewer extends JFrame {
     private JComboBox<String> selectionCombo;
     private JCheckBox crossoverCheck;
     private JTextField popSizeField;
+    private JTextField targetFitnessField;
     private JTextField genField;
     private JTextField genomeLengthField;
     private JTextField elitismField;
@@ -103,6 +104,10 @@ public class EvolutionViewer extends JFrame {
         controlPanel.add(new JLabel("Generations:"));
         genField = new JTextField("101", 5);
         controlPanel.add(genField);
+
+        controlPanel.add(new JLabel("Target Fitness:"));
+        targetFitnessField = new JTextField("1000", 5); // WARNING check what happens with parse double if blank
+        controlPanel.add(targetFitnessField);
 
         controlPanel.add(new JLabel("Genome Length:"));
         genomeLengthField = new JTextField("100", 5);
@@ -336,6 +341,14 @@ public class EvolutionViewer extends JFrame {
         pathPhenotypePanel.revalidate();
         pathPhenotypePanel.repaint();
 
+        // Threshold reached
+        try {
+            if (Double.parseDouble(targetFitnessField.getText()) < fitnessFunction.calculateFitness(bestChromosome)) {
+                pauseEvolution();
+            }
+        } catch (Exception e) {
+            System.err.println("Cannot Parse targetFitnessFieldText");
+        }
     }
 
     public static void main(String[] args) {
